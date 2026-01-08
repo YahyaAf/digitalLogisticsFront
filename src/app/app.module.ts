@@ -8,13 +8,19 @@ import { AppComponent } from './app.component';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './header/header.component';
 import { LoginComponent } from './features/login/login.component';
+import { DashboardLayoutComponent } from './features/dashboard/layout/dashboard-layout.component';
+import { DashboardHomeComponent } from './features/dashboard/home/dashboard-home.component';
+import { SidebarComponent } from './features/dashboard/sidebar/sidebar.component';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
-    LoginComponent
+    LoginComponent,
+    DashboardLayoutComponent,
+    DashboardHomeComponent,
+    SidebarComponent
   ],
   imports: [
     BrowserModule,

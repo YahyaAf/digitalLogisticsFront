@@ -80,9 +80,15 @@ export class AuthService {
 
   private loadCurrentUser(): void {
     this.getCurrentUser().subscribe({
-      error: () => {
-        this.clearTokens();
-        this.isAuthenticated.set(false);
+      next: (response) => {
+        if (response.success && response.data) {
+          this.currentUser.set(response.data);
+        }
+      },
+      error: (error) => {
+        // Ne pas déconnecter si c'est juste getCurrentUser qui échoue au refresh
+        // L'interceptor va gérer le refresh du token si nécessaire
+        console.warn('Failed to load current user:', error);
       }
     });
   }

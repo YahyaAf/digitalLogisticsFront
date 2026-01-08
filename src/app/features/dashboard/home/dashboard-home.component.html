@@ -1,0 +1,177 @@
+<div class="space-y-4">
+  <!-- Page Header -->
+  <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+    <div>
+      <h1 class="text-2xl font-bold text-white">Dashboard</h1>
+      <p class="text-gray-400 text-sm mt-0.5">Welcome back! Here's what's happening today.</p>
+    </div>
+    <div class="mt-3 md:mt-0">
+      <button class="bg-primary-500 hover:bg-primary-600 text-white text-sm px-4 py-2 rounded-lg font-medium transition-colors duration-200 flex items-center space-x-2">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+        </svg>
+        <span>New Order</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    @for (stat of stats; track stat.title) {
+      <div class="bg-dark-light border border-dark-lighter rounded-lg p-4 hover:border-primary-500/50 transition-all duration-200 hover:shadow-lg hover:shadow-primary-500/10">
+        <div class="flex items-center justify-between mb-3">
+          <div [class]="'w-10 h-10 rounded-lg bg-gradient-to-br ' + stat.color + ' flex items-center justify-center'">
+            @switch (stat.icon) {
+              @case ('clipboard') {
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                </svg>
+              }
+              @case ('dollar') {
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              }
+              @case ('truck') {
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"></path>
+                </svg>
+              }
+              @case ('users') {
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                </svg>
+              }
+            }
+          </div>
+          <span [class]="'text-xs font-semibold px-2 py-0.5 rounded-full ' + (stat.isPositive ? 'text-green-500 bg-green-500/10' : 'text-red-500 bg-red-500/10')">
+            {{ stat.change }}
+          </span>
+        </div>
+        <h3 class="text-gray-400 text-xs mb-1">{{ stat.title }}</h3>
+        <p class="text-white text-2xl font-bold">{{ stat.value }}</p>
+      </div>
+    }
+  </div>
+
+  <!-- Charts & Activity -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+    <!-- Activity Chart -->
+    <div class="lg:col-span-2 bg-dark-light border border-dark-lighter rounded-lg p-4">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-lg font-bold text-white">Activity Overview</h2>
+        <select class="bg-dark-lighter text-white text-xs px-3 py-1.5 rounded-md border border-dark-lighter focus:outline-none focus:ring-1 focus:ring-primary-500">
+          <option>Last 7 days</option>
+          <option>Last 30 days</option>
+          <option>Last 3 months</option>
+        </select>
+      </div>
+      <div class="h-48 flex items-end justify-between space-x-2">
+        @for (item of [40, 70, 45, 80, 60, 90, 55]; track $index) {
+          <div class="flex-1 bg-gradient-to-t from-primary-500 to-primary-400 rounded-t-lg hover:opacity-80 transition-opacity cursor-pointer"
+               [style.height.%]="item">
+          </div>
+        }
+      </div>
+      <div class="flex justify-between mt-4 text-gray-400 text-sm">
+        <span>Mon</span>
+        <span>Tue</span>
+        <span>Wed</span>
+        <span>Thu</span>
+        <span>Fri</span>
+        <span>Sat</span>
+        <span>Sun</span>
+      </div>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="bg-dark-light border border-dark-lighter rounded-lg p-4">
+      <h2 class="text-lg font-bold text-white mb-4">Quick Stats</h2>
+      <div class="space-y-4">
+        <div>
+          <div class="flex justify-between items-center mb-2">
+            <span class="text-gray-400 text-sm">Completion Rate</span>
+            <span class="text-white font-semibold">87%</span>
+          </div>
+          <div class="h-2 bg-dark-lighter rounded-full overflow-hidden">
+            <div class="h-full bg-gradient-to-r from-green-500 to-green-400 rounded-full" style="width: 87%"></div>
+          </div>
+        </div>
+        <div>
+          <div class="flex justify-between items-center mb-2">
+            <span class="text-gray-400 text-sm">Customer Satisfaction</span>
+            <span class="text-white font-semibold">92%</span>
+          </div>
+          <div class="h-2 bg-dark-lighter rounded-full overflow-hidden">
+            <div class="h-full bg-gradient-to-r from-blue-500 to-blue-400 rounded-full" style="width: 92%"></div>
+          </div>
+        </div>
+        <div>
+          <div class="flex justify-between items-center mb-2">
+            <span class="text-gray-400 text-sm">On-Time Delivery</span>
+            <span class="text-white font-semibold">78%</span>
+          </div>
+          <div class="h-2 bg-dark-lighter rounded-full overflow-hidden">
+            <div class="h-full bg-gradient-to-r from-yellow-500 to-yellow-400 rounded-full" style="width: 78%"></div>
+          </div>
+        </div>
+        <div>
+          <div class="flex justify-between items-center mb-2">
+            <span class="text-gray-400 text-sm">Product Quality</span>
+            <span class="text-white font-semibold">95%</span>
+          </div>
+          <div class="h-2 bg-dark-lighter rounded-full overflow-hidden">
+            <div class="h-full bg-gradient-to-r from-purple-500 to-purple-400 rounded-full" style="width: 95%"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Orders Table -->
+  <div class="bg-dark-light border border-dark-lighter rounded-lg overflow-hidden">
+    <div class="p-4 border-b border-dark-lighter">
+      <div class="flex items-center justify-between">
+        <h2 class="text-lg font-bold text-white">Recent Orders</h2>
+        <a href="#" class="text-primary-500 hover:text-primary-400 text-sm font-medium">View All</a>
+      </div>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="w-full">
+        <thead class="bg-dark-lighter">
+          <tr>
+            <th class="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Order ID</th>
+            <th class="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Client</th>
+            <th class="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Product</th>
+            <th class="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Status</th>
+            <th class="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Amount</th>
+            <th class="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-dark-lighter">
+          @for (order of recentOrders; track order.id) {
+            <tr class="hover:bg-dark-lighter transition-colors">
+              <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-primary-500">{{ order.id }}</td>
+              <td class="px-4 py-3 whitespace-nowrap text-sm text-white">{{ order.client }}</td>
+              <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-400">{{ order.product }}</td>
+              <td class="px-4 py-3 whitespace-nowrap">
+                <span [class]="'px-3 py-1 text-xs font-semibold rounded-full ' + getStatusClass(order.status)">
+                  {{ order.status }}
+                </span>
+              </td>
+              <td class="px-4 py-3 whitespace-nowrap text-sm font-semibold text-white">{{ order.amount }}</td>
+              <td class="px-4 py-3 whitespace-nowrap text-sm">
+                <button class="text-gray-400 hover:text-white transition-colors">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                  </svg>
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
