@@ -23,6 +23,7 @@ export class SidebarComponent {
     { icon: 'chart', label: 'Analytics', route: '/dashboard/analytics' },
     { icon: 'users', label: 'Clients', route: '/dashboard/clients' },
     { icon: 'package', label: 'Products', route: '/dashboard/products', badge: 12 },
+    { icon: 'supplier', label: 'Suppliers', route: '/dashboard/suppliers' },
     { icon: 'truck', label: 'Shipments', route: '/dashboard/shipments' },
     { icon: 'warehouse', label: 'Warehouses', route: '/dashboard/warehouses' },
     { icon: 'clipboard', label: 'Orders', route: '/dashboard/orders', badge: 5 },

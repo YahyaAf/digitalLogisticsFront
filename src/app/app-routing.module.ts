@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './features/login/login.component';
 import { DashboardLayoutComponent } from './features/dashboard/layout/dashboard-layout.component';
 import { DashboardHomeComponent } from './features/dashboard/home/dashboard-home.component';
+import { SuppliersComponent } from './features/dashboard/suppliers/suppliers.component';
 import { authGuard } from './core/guards/auth.guard';
 
 const routes: Routes = [
@@ -15,6 +16,7 @@ const routes: Routes = [
     children: [
       { path: '', redirectTo: 'home', pathMatch: 'full' },
       { path: 'home', component: DashboardHomeComponent },
+      { path: 'suppliers', component: SuppliersComponent },
     ]
   }
 ];

@@ -1,0 +1,203 @@
+<div class="space-y-4">
+  <!-- Notification Toast -->
+  @if (notification().show) {
+    <div [class]="'fixed top-4 right-4 z-50 px-6 py-4 rounded-lg shadow-2xl flex items-center space-x-3 animate-slide-in ' + 
+                 (notification().type === 'success' ? 'bg-green-500' : 'bg-red-500')">
+      @if (notification().type === 'success') {
+        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+        </svg>
+      } @else {
+        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      }
+      <span class="text-white font-medium">{{ notification().message }}</span>
+    </div>
+  }
+
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-2xl font-bold text-white">Suppliers</h1>
+      <p class="text-gray-400 text-sm mt-0.5">Manage your suppliers</p>
+    </div>
+    <button 
+      (click)="openCreateModal()"
+      class="bg-primary-500 hover:bg-primary-600 text-white text-sm px-4 py-2 rounded-lg font-medium transition-colors flex items-center space-x-2"
+    >
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+      </svg>
+      <span>Add Supplier</span>
+    </button>
+  </div>
+
+  <div class="bg-dark-light border border-dark-lighter rounded-lg overflow-hidden">
+    @if (loading()) {
+      <div class="flex items-center justify-center py-12">
+        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500"></div>
+      </div>
+    } @else {
+      <div class="overflow-x-auto">
+        <table class="w-full">
+          <thead class="bg-dark-lighter">
+            <tr>
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">ID</th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Name</th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Phone</th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Address</th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Matricule</th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-dark-lighter">
+            @if (suppliers().length === 0) {
+              <tr>
+                <td colspan="6" class="px-4 py-8 text-center text-gray-400">
+                  No suppliers found
+                </td>
+              </tr>
+            }
+            @for (supplier of suppliers(); track supplier.id) {
+              <tr class="hover:bg-dark-lighter transition-colors">
+                <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-primary-500">#{{ supplier.id }}</td>
+                <td class="px-4 py-3 whitespace-nowrap text-sm text-white font-medium">{{ supplier.name }}</td>
+                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-400">{{ supplier.phoneNumber }}</td>
+                <td class="px-4 py-3 text-sm text-gray-400">{{ supplier.address }}</td>
+                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-400">{{ supplier.matricule }}</td>
+                <td class="px-4 py-3 whitespace-nowrap text-sm">
+                  <div class="flex items-center space-x-2">
+                    <button 
+                      (click)="openEditModal(supplier)"
+                      class="text-blue-400 hover:text-blue-300 transition-colors p-1"
+                      title="Edit"
+                    >
+                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                      </svg>
+                    </button>
+                    <button 
+                      (click)="deleteSupplier(supplier.id)"
+                      class="text-red-400 hover:text-red-300 transition-colors p-1"
+                      title="Delete"
+                    >
+                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                      </svg>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+</div>
+
+@if (showModal()) {
+  <div class="fixed inset-0 z-50 overflow-y-auto">
+    <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+      <div class="fixed inset-0 transition-opacity bg-black bg-opacity-75" (click)="closeModal()"></div>
+
+      <div class="inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-dark-light border border-dark-lighter rounded-lg shadow-xl">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-bold text-white">
+            {{ isEditMode() ? 'Edit Supplier' : 'Add Supplier' }}
+          </h3>
+          <button (click)="closeModal()" class="text-gray-400 hover:text-white">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+
+        <form (ngSubmit)="saveSupplier()" class="space-y-4">
+          @if (errorMessage()) {
+            <div class="bg-red-500/10 border border-red-500 text-red-500 px-4 py-3 rounded-lg text-sm">
+              {{ errorMessage() }}
+            </div>
+          }
+
+          <div>
+            <label class="block text-sm font-medium text-gray-300 mb-1">Name</label>
+            <input 
+              type="text"
+              [value]="supplierForm().name"
+              (input)="updateFormField('name', $any($event.target).value)"
+              [class]="'w-full px-3 py-2 bg-dark-lighter border rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary-500 ' + 
+                       (validationErrors()['name'] ? 'border-red-500' : 'border-dark-lighter')"
+              required
+            />
+            @if (validationErrors()['name']) {
+              <p class="text-red-500 text-xs mt-1">{{ validationErrors()['name'] }}</p>
+            }
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-300 mb-1">Phone Number</label>
+            <input 
+              type="tel"
+              [value]="supplierForm().phoneNumber"
+              (input)="updateFormField('phoneNumber', $any($event.target).value)"
+              [class]="'w-full px-3 py-2 bg-dark-lighter border rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary-500 ' + 
+                       (validationErrors()['phoneNumber'] ? 'border-red-500' : 'border-dark-lighter')"
+              required
+            />
+            @if (validationErrors()['phoneNumber']) {
+              <p class="text-red-500 text-xs mt-1">{{ validationErrors()['phoneNumber'] }}</p>
+            }
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-300 mb-1">Address</label>
+            <textarea 
+              [value]="supplierForm().address"
+              (input)="updateFormField('address', $any($event.target).value)"
+              [class]="'w-full px-3 py-2 bg-dark-lighter border rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary-500 ' + 
+                       (validationErrors()['address'] ? 'border-red-500' : 'border-dark-lighter')"
+              rows="3"
+              required
+            ></textarea>
+            @if (validationErrors()['address']) {
+              <p class="text-red-500 text-xs mt-1">{{ validationErrors()['address'] }}</p>
+            }
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-300 mb-1">Matricule</label>
+            <input 
+              type="text"
+              [value]="supplierForm().matricule"
+              (input)="updateFormField('matricule', $any($event.target).value)"
+              [class]="'w-full px-3 py-2 bg-dark-lighter border rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary-500 ' + 
+                       (validationErrors()['matricule'] ? 'border-red-500' : 'border-dark-lighter')"
+              required
+            />
+            @if (validationErrors()['matricule']) {
+              <p class="text-red-500 text-xs mt-1">{{ validationErrors()['matricule'] }}</p>
+            }
+          </div>
+
+          <div class="flex justify-end space-x-3 pt-4">
+            <button 
+              type="button"
+              (click)="closeModal()"
+              class="px-4 py-2 text-sm font-medium text-gray-300 hover:text-white transition-colors"
+            >
+              Cancel
+            </button>
+            <button 
+              type="submit"
+              [disabled]="loading()"
+              class="px-4 py-2 text-sm font-medium text-white bg-primary-500 hover:bg-primary-600 rounded-md transition-colors disabled:opacity-50"
+            >
+              {{ isEditMode() ? 'Update' : 'Create' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+}

@@ -1,10 +1,12 @@
 import { HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { catchError, switchMap, throwError } from 'rxjs';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
+  const router = inject(Router);
   const token = authService.getToken();
 
   // Routes qui ne nécessitent PAS de token
@@ -40,7 +42,13 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
             return next(clonedReq);
           }),
           catchError(refreshError => {
-            authService.logout().subscribe();
+            console.error('Refresh token failed, logging out:', refreshError);
+            // Clear tokens directly without calling logout API (tokens are already invalid)
+            localStorage.removeItem('access_token');
+            localStorage.removeItem('refresh_token');
+            authService.isAuthenticated.set(false);
+            authService.currentUser.set(null);
+            router.navigate(['/login']);
             return throwError(() => refreshError);
           })
         );
