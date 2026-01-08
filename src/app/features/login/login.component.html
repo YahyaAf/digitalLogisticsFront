@@ -1,0 +1,61 @@
+<div class="login-container">
+  <div class="login-card">
+    <h2>Connexion</h2>
+    
+    @if (errorMessage()) {
+      <div class="error-message">
+        <span class="error-icon">⚠️</span>
+        {{ errorMessage() }}
+      </div>
+    }
+
+    <form (ngSubmit)="onLogin()">
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input 
+          type="email" 
+          id="email" 
+          [(ngModel)]="email" 
+          name="email"
+          placeholder="exemple@email.com"
+          required
+          [disabled]="isLoading()"
+          [class.input-error]="validationErrors()['email']"
+        />
+        @if (validationErrors()['email']) {
+          <span class="field-error">{{ validationErrors()['email'] }}</span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="password">Mot de passe</label>
+        <input 
+          type="password" 
+          id="password" 
+          [(ngModel)]="password"
+          name="password"
+          placeholder="••••••••" 
+          required
+          [disabled]="isLoading()"
+          [class.input-error]="validationErrors()['password']"
+        />
+        @if (validationErrors()['password']) {
+          <span class="field-error">{{ validationErrors()['password'] }}</span>
+        }
+      </div>
+
+      <button 
+        type="submit" 
+        class="btn-submit"
+        [disabled]="isLoading() || !email() || !password()"
+      >
+        @if (isLoading()) {
+          <span class="spinner"></span>
+          Connexion en cours...
+        } @else {
+          Se connecter
+        }
+      </button>
+    </form>
+  </div>
+</div>
