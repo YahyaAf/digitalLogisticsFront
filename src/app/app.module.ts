@@ -13,6 +13,7 @@ import { DashboardHomeComponent } from './features/dashboard/home/dashboard-home
 import { SidebarComponent } from './features/dashboard/sidebar/sidebar.component';
 import { SuppliersComponent } from './features/dashboard/suppliers/suppliers.component';
 import { UsersComponent } from './features/dashboard/users/users.component';
+import { WarehousesComponent } from './features/dashboard/warehouses/warehouses.component';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
 
 @NgModule({
@@ -24,7 +25,8 @@ import { authInterceptor } from './core/interceptors/auth.interceptor';
     DashboardHomeComponent,
     SidebarComponent,
     SuppliersComponent,
-    UsersComponent
+    UsersComponent,
+    WarehousesComponent
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,314 @@
+<div class="p-6">
+  <!-- Toast Notification -->
+  @if (notification()) {
+    <div class="fixed top-4 right-4 z-50 animate-slide-in">
+      <div 
+        [ngClass]="notification()!.type === 'success' ? 'bg-green-500' : 'bg-red-500'"
+        class="text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-3"
+      >
+        @if (notification()!.type === 'success') {
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+          </svg>
+        } @else {
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+          </svg>
+        }
+        <span>{{ notification()!.message }}</span>
+      </div>
+    </div>
+  }
+
+  <!-- Header -->
+  <div class="flex justify-between items-center mb-6">
+    <div>
+      <h1 class="text-2xl font-bold text-white">Warehouses Management</h1>
+      <p class="text-gray-400 mt-1">Manage storage facilities and their capacities</p>
+    </div>
+    <button
+      (click)="openCreateModal()"
+      class="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-6 py-2.5 rounded-lg flex items-center gap-2 transition-all shadow-lg hover:shadow-purple-500/50"
+    >
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+      </svg>
+      Add Warehouse
+    </button>
+  </div>
+
+  <!-- Warehouses Table -->
+  <div class="bg-dark-light rounded-xl shadow-lg overflow-hidden border border-purple-500/20">
+    @if (loading() && warehouses().length === 0) {
+      <div class="flex justify-center items-center py-20">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500"></div>
+      </div>
+    } @else if (warehouses().length === 0) {
+      <div class="text-center py-20">
+        <svg class="w-16 h-16 text-gray-600 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+        </svg>
+        <h3 class="text-xl font-semibold text-gray-400 mb-2">No warehouses yet</h3>
+        <p class="text-gray-500">Create your first warehouse to get started.</p>
+      </div>
+    } @else {
+      <table class="w-full">
+        <thead class="bg-dark border-b border-gray-700">
+          <tr>
+            <th class="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">ID</th>
+            <th class="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Name</th>
+            <th class="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Code</th>
+            <th class="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Capacity</th>
+            <th class="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Manager</th>
+            <th class="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Status</th>
+            <th class="px-6 py-4 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-700">
+          @for (warehouse of warehouses(); track warehouse.id) {
+            <tr class="hover:bg-dark transition-colors">
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300">{{ warehouse.id }}</td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-lg bg-gradient-to-r from-blue-500 to-cyan-500 flex items-center justify-center">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                    </svg>
+                  </div>
+                  <span class="text-sm font-medium text-white">{{ warehouse.name }}</span>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-500/20 text-purple-400">
+                  {{ warehouse.code }}
+                </span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
+                <div class="flex items-center gap-2">
+                  <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                  </svg>
+                  <span>{{ warehouse.capacity }} units</span>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm">
+                  <div class="text-white font-medium">{{ warehouse.managerName }}</div>
+                  <div class="text-gray-400 text-xs">{{ warehouse.managerEmail }}</div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                @if (warehouse.active) {
+                  <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-500/20 text-green-400">
+                    Active
+                  </span>
+                } @else {
+                  <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-500/20 text-red-400">
+                    Inactive
+                  </span>
+                }
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                <button
+                  (click)="openEditModal(warehouse)"
+                  class="text-blue-400 hover:text-blue-300 mr-4 transition-colors"
+                  title="Edit"
+                >
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                  </svg>
+                </button>
+                <button
+                  (click)="deleteWarehouse(warehouse.id)"
+                  class="text-red-400 hover:text-red-300 transition-colors"
+                  title="Delete"
+                >
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                  </svg>
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </div>
+
+  <!-- Modal -->
+  @if (showModal()) {
+    <div class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <div class="bg-dark-light rounded-2xl shadow-2xl w-full max-w-2xl border border-purple-500/30">
+        <!-- Modal Header -->
+        <div class="flex justify-between items-center p-6 border-b border-gray-700">
+          <h3 class="text-2xl font-bold text-white">
+            {{ isEditMode() ? 'Edit Warehouse' : 'Create New Warehouse' }}
+          </h3>
+          <button
+            (click)="closeModal()"
+            class="text-gray-400 hover:text-white transition-colors"
+          >
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Modal Body -->
+        <form (ngSubmit)="saveWarehouse()" class="p-6">
+          <!-- Error Message -->
+          @if (errorMessage()) {
+            <div class="mb-6 p-4 bg-red-500/10 border border-red-500/50 rounded-lg">
+              <p class="text-red-400 text-sm">{{ errorMessage() }}</p>
+            </div>
+          }
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Name Field -->
+            <div>
+              <label class="block text-sm font-medium text-gray-300 mb-2">Warehouse Name</label>
+              <input
+                type="text"
+                [value]="warehouseForm().name"
+                (input)="updateFormField('name', $any($event.target).value)"
+                [ngClass]="{'border-red-500': validationErrors()['name']}"
+                class="w-full px-4 py-3 bg-dark border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 outline-none transition"
+                placeholder="Enter warehouse name"
+                required
+              />
+              @if (validationErrors()['name']) {
+                <p class="mt-1 text-sm text-red-400">{{ validationErrors()['name'] }}</p>
+              }
+            </div>
+
+            <!-- Code Field -->
+            <div>
+              <label class="block text-sm font-medium text-gray-300 mb-2">Warehouse Code</label>
+              <input
+                type="text"
+                [value]="warehouseForm().code"
+                (input)="updateFormField('code', $any($event.target).value.toUpperCase())"
+                [ngClass]="{'border-red-500': validationErrors()['code']}"
+                class="w-full px-4 py-3 bg-dark border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 outline-none transition uppercase"
+                placeholder="WH001"
+                required
+              />
+              @if (validationErrors()['code']) {
+                <p class="mt-1 text-sm text-red-400">{{ validationErrors()['code'] }}</p>
+              }
+              <p class="mt-1 text-xs text-gray-500">Only uppercase letters and numbers</p>
+            </div>
+
+            <!-- Capacity Field -->
+            <div>
+              <label class="block text-sm font-medium text-gray-300 mb-2">Capacity (units)</label>
+              <input
+                type="number"
+                [value]="warehouseForm().capacity"
+                (input)="updateFormField('capacity', +$any($event.target).value)"
+                [ngClass]="{'border-red-500': validationErrors()['capacity']}"
+                class="w-full px-4 py-3 bg-dark border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 outline-none transition"
+                placeholder="1000"
+                min="1"
+                max="100000"
+                required
+              />
+              @if (validationErrors()['capacity']) {
+                <p class="mt-1 text-sm text-red-400">{{ validationErrors()['capacity'] }}</p>
+              }
+              <p class="mt-1 text-xs text-gray-500">Between 1 and 100,000 units</p>
+            </div>
+
+            <!-- Manager Dropdown -->
+            <div class="relative">
+              <label class="block text-sm font-medium text-gray-300 mb-2">Warehouse Manager</label>
+              @if (managers().length === 0) {
+                <div class="w-full px-4 py-3 bg-red-500/10 border border-red-500/50 rounded-lg text-red-400 text-sm">
+                  No warehouse managers available. Please create a user with WAREHOUSE_MANAGER role first.
+                </div>
+              } @else {
+                <button
+                  type="button"
+                  (click)="toggleManagerDropdown()"
+                  [ngClass]="{'border-red-500': validationErrors()['managerId']}"
+                  class="w-full px-4 py-3 bg-dark border border-gray-700 rounded-lg text-white focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 outline-none transition flex items-center justify-between"
+                >
+                  @if (getSelectedManager(); as manager) {
+                    <div class="text-left">
+                      <div class="font-medium">{{ manager.name }}</div>
+                      <div class="text-xs text-gray-400">{{ manager.email }}</div>
+                    </div>
+                  } @else {
+                    <span class="text-gray-500">Select a manager</span>
+                  }
+                  <svg class="w-5 h-5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                  </svg>
+                </button>
+                
+                @if (showManagerDropdown()) {
+                  <div class="absolute z-10 w-full mt-2 bg-dark-light border border-gray-700 rounded-lg shadow-xl overflow-hidden max-h-60 overflow-y-auto">
+                    @for (manager of managers(); track manager.id) {
+                      <button
+                        type="button"
+                        (click)="selectManager(manager.id)"
+                        [ngClass]="{'bg-purple-500/20': warehouseForm().managerId === manager.id}"
+                        class="w-full px-4 py-3 text-left hover:bg-dark transition-colors"
+                      >
+                        <div class="font-medium text-white">{{ manager.name }}</div>
+                        <div class="text-xs text-gray-400">{{ manager.email }}</div>
+                      </button>
+                    }
+                  </div>
+                }
+              }
+              
+              @if (validationErrors()['managerId']) {
+                <p class="mt-1 text-sm text-red-400">{{ validationErrors()['managerId'] }}</p>
+              }
+            </div>
+
+            <!-- Active Status -->
+            <div class="md:col-span-2">
+              <label class="flex items-center gap-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  [checked]="warehouseForm().active"
+                  (change)="updateFormField('active', $any($event.target).checked)"
+                  class="w-5 h-5 rounded border-gray-700 text-purple-500 focus:ring-purple-500 focus:ring-offset-dark-light"
+                />
+                <span class="text-sm font-medium text-gray-300">Active Warehouse</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Modal Footer -->
+          <div class="flex justify-end gap-3 mt-6 pt-6 border-t border-gray-700">
+            <button
+              type="button"
+              (click)="closeModal()"
+              class="px-6 py-2.5 border border-gray-700 text-gray-300 rounded-lg hover:bg-dark transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              [disabled]="loading() || managers().length === 0"
+              class="px-6 py-2.5 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg hover:from-purple-600 hover:to-pink-600 transition-all shadow-lg hover:shadow-purple-500/50 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+            >
+              @if (loading()) {
+                <svg class="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <span>Saving...</span>
+              } @else {
+                <span>{{ isEditMode() ? 'Update' : 'Create' }} Warehouse</span>
+              }
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  }
+</div>
