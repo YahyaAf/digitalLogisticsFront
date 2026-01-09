@@ -2,7 +2,8 @@ import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { 
-  LoginRequest, 
+  LoginRequest,
+  RegisterRequest, 
   RefreshTokenRequest, 
   AuthResponse, 
   ApiResponse, 
@@ -38,6 +39,10 @@ export class AuthService {
           }
         })
       );
+  }
+
+  register(userData: RegisterRequest): Observable<ApiResponse<string>> {
+    return this.http.post<ApiResponse<string>>(`${this.API_URL}/register`, userData);
   }
 
   refreshToken(): Observable<ApiResponse<AuthResponse>> {

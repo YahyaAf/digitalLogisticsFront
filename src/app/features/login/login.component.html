@@ -2,6 +2,13 @@
   <div class="login-card">
     <h2>Connexion</h2>
     
+    @if (successMessage()) {
+      <div class="success-message">
+        <span class="success-icon">✓</span>
+        {{ successMessage() }}
+      </div>
+    }
+    
     @if (errorMessage()) {
       <div class="error-message">
         <span class="error-icon">⚠️</span>
@@ -17,7 +24,7 @@
           id="email" 
           [(ngModel)]="email" 
           name="email"
-          placeholder="exemple@email.com"
+          placeholder="exemple&#64;email.com"
           required
           [disabled]="isLoading()"
           [class.input-error]="validationErrors()['email']"
@@ -57,5 +64,9 @@
         }
       </button>
     </form>
+
+    <div class="register-link">
+      <p>Vous n'avez pas de compte ? <a routerLink="/register">Créer un compte</a></p>
+    </div>
   </div>
 </div>

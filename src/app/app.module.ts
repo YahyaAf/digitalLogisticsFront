@@ -6,8 +6,8 @@ import { FormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { RouterOutlet } from '@angular/router';
-import { HeaderComponent } from './header/header.component';
 import { LoginComponent } from './features/login/login.component';
+import { RegisterComponent } from './features/register/register.component';
 import { DashboardLayoutComponent } from './features/dashboard/layout/dashboard-layout.component';
 import { DashboardHomeComponent } from './features/dashboard/home/dashboard-home.component';
 import { SidebarComponent } from './features/dashboard/sidebar/sidebar.component';
@@ -17,8 +17,8 @@ import { authInterceptor } from './core/interceptors/auth.interceptor';
 @NgModule({
   declarations: [
     AppComponent,
-    HeaderComponent,
     LoginComponent,
+    RegisterComponent,
     DashboardLayoutComponent,
     DashboardHomeComponent,
     SidebarComponent,

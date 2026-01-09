@@ -38,6 +38,24 @@ h2 {
   animation: shake 0.3s;
 }
 
+.success-message {
+  background-color: #d4edda;
+  color: #155724;
+  padding: 12px 15px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  border: 1px solid #c3e6cb;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+}
+
+.success-icon {
+  font-size: 18px;
+  font-weight: bold;
+}
+
 .error-icon {
   font-size: 18px;
 }
@@ -139,4 +157,28 @@ input.input-error:focus {
 
 @keyframes spin {
   to { transform: rotate(360deg); }
+}
+
+.register-link {
+  text-align: center;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.register-link p {
+  color: #666;
+  font-size: 14px;
+}
+
+.register-link a {
+  color: #667eea;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.register-link a:hover {
+  color: #764ba2;
+  text-decoration: underline;
 }

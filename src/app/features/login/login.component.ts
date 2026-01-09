@@ -13,13 +13,21 @@ export class LoginComponent {
   email = signal('');
   password = signal('');
   errorMessage = signal('');
+  successMessage = signal('');
   validationErrors = signal<{[key: string]: string}>({});
   isLoading = signal(false);
 
   constructor(
     private authService: AuthService,
     private router: Router
-  ) {}
+  ) {
+    // Check if coming from registration with success message
+    const navigation = this.router.getCurrentNavigation();
+    const state = navigation?.extras?.state as { message?: string };
+    if (state?.message) {
+      this.successMessage.set(state.message);
+    }
+  }
 
   onLogin(): void {
     this.isLoading.set(true);
