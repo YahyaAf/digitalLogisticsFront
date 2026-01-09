@@ -26,6 +26,8 @@ export class SidebarComponent {
     { icon: 'supplier', label: 'Suppliers', route: '/dashboard/suppliers' },
     { icon: 'truck', label: 'Shipments', route: '/dashboard/shipments' },
     { icon: 'warehouse', label: 'Warehouses', route: '/dashboard/warehouses' },
+    { icon: 'clipboard', label: 'Inventories', route: '/dashboard/inventories' },
+    { icon: 'chart', label: 'Movements', route: '/dashboard/inventory-movements' },
     { icon: 'clipboard', label: 'Orders', route: '/dashboard/orders', badge: 5 },
     { icon: 'users-cog', label: 'Users', route: '/dashboard/users' },
   ];

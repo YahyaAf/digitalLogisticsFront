@@ -16,6 +16,8 @@ import { UsersComponent } from './features/dashboard/users/users.component';
 import { WarehousesComponent } from './features/dashboard/warehouses/warehouses.component';
 import { ClientsComponent } from './features/dashboard/clients/clients.component';
 import { ProductsComponent } from './features/dashboard/products/products.component';
+import { InventoriesComponent } from './features/dashboard/inventories/inventories.component';
+import { InventoryMovementsComponent } from './features/dashboard/inventory-movements/inventory-movements.component';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
 
 @NgModule({
@@ -30,7 +32,9 @@ import { authInterceptor } from './core/interceptors/auth.interceptor';
     UsersComponent,
     WarehousesComponent,
     ClientsComponent,
-    ProductsComponent
+    ProductsComponent,
+    InventoriesComponent,
+    InventoryMovementsComponent
   ],
   imports: [
     BrowserModule,

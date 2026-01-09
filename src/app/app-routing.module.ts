@@ -9,6 +9,8 @@ import { UsersComponent } from './features/dashboard/users/users.component';
 import { WarehousesComponent } from './features/dashboard/warehouses/warehouses.component';
 import { ClientsComponent } from './features/dashboard/clients/clients.component';
 import { ProductsComponent } from './features/dashboard/products/products.component';
+import { InventoriesComponent } from './features/dashboard/inventories/inventories.component';
+import { InventoryMovementsComponent } from './features/dashboard/inventory-movements/inventory-movements.component';
 import { authGuard } from './core/guards/auth.guard';
 
 const routes: Routes = [
@@ -27,6 +29,8 @@ const routes: Routes = [
       { path: 'warehouses', component: WarehousesComponent },
       { path: 'clients', component: ClientsComponent },
       { path: 'products', component: ProductsComponent },
+      { path: 'inventories', component: InventoriesComponent },
+      { path: 'inventory-movements', component: InventoryMovementsComponent },
     ]
   }
 ];
