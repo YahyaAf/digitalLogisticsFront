@@ -12,6 +12,7 @@ import { DashboardLayoutComponent } from './features/dashboard/layout/dashboard-
 import { DashboardHomeComponent } from './features/dashboard/home/dashboard-home.component';
 import { SidebarComponent } from './features/dashboard/sidebar/sidebar.component';
 import { SuppliersComponent } from './features/dashboard/suppliers/suppliers.component';
+import { UsersComponent } from './features/dashboard/users/users.component';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
 
 @NgModule({
@@ -22,7 +23,8 @@ import { authInterceptor } from './core/interceptors/auth.interceptor';
     DashboardLayoutComponent,
     DashboardHomeComponent,
     SidebarComponent,
-    SuppliersComponent
+    SuppliersComponent,
+    UsersComponent
   ],
   imports: [
     BrowserModule,

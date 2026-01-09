@@ -5,6 +5,7 @@ import { RegisterComponent } from './features/register/register.component';
 import { DashboardLayoutComponent } from './features/dashboard/layout/dashboard-layout.component';
 import { DashboardHomeComponent } from './features/dashboard/home/dashboard-home.component';
 import { SuppliersComponent } from './features/dashboard/suppliers/suppliers.component';
+import { UsersComponent } from './features/dashboard/users/users.component';
 import { authGuard } from './core/guards/auth.guard';
 
 const routes: Routes = [
@@ -19,6 +20,7 @@ const routes: Routes = [
       { path: '', redirectTo: 'home', pathMatch: 'full' },
       { path: 'home', component: DashboardHomeComponent },
       { path: 'suppliers', component: SuppliersComponent },
+      { path: 'users', component: UsersComponent },
     ]
   }
 ];
