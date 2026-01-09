@@ -8,6 +8,7 @@ import { SuppliersComponent } from './features/dashboard/suppliers/suppliers.com
 import { UsersComponent } from './features/dashboard/users/users.component';
 import { WarehousesComponent } from './features/dashboard/warehouses/warehouses.component';
 import { ClientsComponent } from './features/dashboard/clients/clients.component';
+import { ProductsComponent } from './features/dashboard/products/products.component';
 import { authGuard } from './core/guards/auth.guard';
 
 const routes: Routes = [
@@ -25,6 +26,7 @@ const routes: Routes = [
       { path: 'users', component: UsersComponent },
       { path: 'warehouses', component: WarehousesComponent },
       { path: 'clients', component: ClientsComponent },
+      { path: 'products', component: ProductsComponent },
     ]
   }
 ];

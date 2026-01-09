@@ -15,6 +15,7 @@ import { SuppliersComponent } from './features/dashboard/suppliers/suppliers.com
 import { UsersComponent } from './features/dashboard/users/users.component';
 import { WarehousesComponent } from './features/dashboard/warehouses/warehouses.component';
 import { ClientsComponent } from './features/dashboard/clients/clients.component';
+import { ProductsComponent } from './features/dashboard/products/products.component';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
 
 @NgModule({
@@ -28,7 +29,8 @@ import { authInterceptor } from './core/interceptors/auth.interceptor';
     SuppliersComponent,
     UsersComponent,
     WarehousesComponent,
-    ClientsComponent
+    ClientsComponent,
+    ProductsComponent
   ],
   imports: [
     BrowserModule,
