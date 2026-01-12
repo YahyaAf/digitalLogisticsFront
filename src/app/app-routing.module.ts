@@ -12,10 +12,11 @@ import { ProductsComponent } from './features/dashboard/products/products.compon
 import { InventoriesComponent } from './features/dashboard/inventories/inventories.component';
 import { InventoryMovementsComponent } from './features/dashboard/inventory-movements/inventory-movements.component';
 import { PurchaseOrdersComponent } from './features/dashboard/purchase-orders/purchase-orders.component';
+import { HomeComponent } from './features/landing/home/home.component';
 import { authGuard } from './core/guards/auth.guard';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/login', pathMatch: 'full' },
+  { path: '', component: HomeComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { 
