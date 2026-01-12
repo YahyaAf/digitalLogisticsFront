@@ -18,6 +18,7 @@ import { ClientsComponent } from './features/dashboard/clients/clients.component
 import { ProductsComponent } from './features/dashboard/products/products.component';
 import { InventoriesComponent } from './features/dashboard/inventories/inventories.component';
 import { InventoryMovementsComponent } from './features/dashboard/inventory-movements/inventory-movements.component';
+import { PurchaseOrdersComponent } from './features/dashboard/purchase-orders/purchase-orders.component';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
 
 @NgModule({
@@ -34,7 +35,8 @@ import { authInterceptor } from './core/interceptors/auth.interceptor';
     ClientsComponent,
     ProductsComponent,
     InventoriesComponent,
-    InventoryMovementsComponent
+    InventoryMovementsComponent,
+    PurchaseOrdersComponent
   ],
   imports: [
     BrowserModule,

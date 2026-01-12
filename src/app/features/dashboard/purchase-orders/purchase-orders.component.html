@@ -1,0 +1,497 @@
+<div class="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-6">
+  <!-- Toast Notification -->
+  @if (notification()) {
+    <div class="fixed top-4 right-4 z-50 toast-slide-in">
+      <div 
+        class="px-6 py-3 rounded-lg shadow-lg text-white"
+        [ngClass]="{
+          'bg-green-600': notification()!.type === 'success',
+          'bg-red-600': notification()!.type === 'error'
+        }">
+        <p class="font-medium">{{ notification()!.message }}</p>
+      </div>
+    </div>
+  }
+
+  <div class="max-w-7xl mx-auto">
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-8">
+      <h1 class="text-4xl font-bold text-white">Purchase Orders</h1>
+      <button 
+        (click)="openCreateModal()"
+        class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors duration-200 shadow-lg">
+        + Add Purchase Order
+      </button>
+    </div>
+
+    <!-- Status Filter Tabs -->
+    <div class="flex gap-2 mb-6 overflow-x-auto">
+      <button 
+        (click)="filterByStatus('all')"
+        [ngClass]="filterStatus() === 'all' ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300 hover:bg-gray-600'"
+        class="px-4 py-2 rounded-lg font-medium transition-colors">
+        All Orders
+      </button>
+      <button 
+        (click)="filterByStatus(PurchaseOrderStatus.CREATED)"
+        [ngClass]="filterStatus() === PurchaseOrderStatus.CREATED ? 'bg-yellow-600 text-white' : 'bg-gray-700 text-gray-300 hover:bg-gray-600'"
+        class="px-4 py-2 rounded-lg font-medium transition-colors">
+        Created
+      </button>
+      <button 
+        (click)="filterByStatus(PurchaseOrderStatus.APPROVED)"
+        [ngClass]="filterStatus() === PurchaseOrderStatus.APPROVED ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300 hover:bg-gray-600'"
+        class="px-4 py-2 rounded-lg font-medium transition-colors">
+        Approved
+      </button>
+      <button 
+        (click)="filterByStatus(PurchaseOrderStatus.RECEIVED)"
+        [ngClass]="filterStatus() === PurchaseOrderStatus.RECEIVED ? 'bg-green-600 text-white' : 'bg-gray-700 text-gray-300 hover:bg-gray-600'"
+        class="px-4 py-2 rounded-lg font-medium transition-colors">
+        Received
+      </button>
+      <button 
+        (click)="filterByStatus(PurchaseOrderStatus.CANCELED)"
+        [ngClass]="filterStatus() === PurchaseOrderStatus.CANCELED ? 'bg-red-600 text-white' : 'bg-gray-700 text-gray-300 hover:bg-gray-600'"
+        class="px-4 py-2 rounded-lg font-medium transition-colors">
+        Canceled
+      </button>
+    </div>
+
+    <!-- Loading -->
+    @if (loading()) {
+      <div class="flex justify-center items-center py-12">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+      </div>
+    }
+
+    <!-- Table -->
+    @if (!loading()) {
+      <div class="bg-gray-800 rounded-lg shadow-xl overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full">
+            <thead class="bg-gray-700">
+              <tr>
+                <th class="px-6 py-4 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">ID</th>
+                <th class="px-6 py-4 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Supplier</th>
+                <th class="px-6 py-4 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Status</th>
+                <th class="px-6 py-4 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Created</th>
+                <th class="px-6 py-4 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Expected Delivery</th>
+                <th class="px-6 py-4 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Total Amount</th>
+                <th class="px-6 py-4 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Items</th>
+                <th class="px-6 py-4 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-700">
+              @for (order of orders(); track order.id) {
+                <tr class="hover:bg-gray-700/50 transition-colors">
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300">#{{ order.id }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-white font-medium">{{ order.supplierName }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span class="px-3 py-1 rounded-full text-xs font-semibold" [ngClass]="getStatusColor(order.status)">
+                      {{ order.status }}
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300">{{ formatDate(order.createdAt) }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300">{{ formatDate(order.expectedDelivery) }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-green-400">{{ formatPrice(order.totalAmount) }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300">{{ order.totalItems }} items</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm">
+                    <div class="flex gap-2">
+                      <button 
+                        (click)="openDetailsModal(order)"
+                        class="px-3 py-1 bg-gray-600 hover:bg-gray-500 text-white rounded text-xs transition-colors">
+                        Details
+                      </button>
+
+                      @if (order.status === PurchaseOrderStatus.CREATED) {
+                        <button 
+                          (click)="approveOrder(order.id)"
+                          class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded text-xs transition-colors">
+                          Approve
+                        </button>
+                        <button 
+                          (click)="openEditModal(order)"
+                          class="px-3 py-1 bg-yellow-600 hover:bg-yellow-700 text-white rounded text-xs transition-colors">
+                          Edit
+                        </button>
+                        <button 
+                          (click)="cancelOrder(order.id)"
+                          class="px-3 py-1 bg-orange-600 hover:bg-orange-700 text-white rounded text-xs transition-colors">
+                          Cancel
+                        </button>
+                        <button 
+                          (click)="deleteOrder(order.id)"
+                          class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded text-xs transition-colors">
+                          Delete
+                        </button>
+                      }
+
+                      @if (order.status === PurchaseOrderStatus.APPROVED) {
+                        <button 
+                          (click)="openReceiveModal(order)"
+                          class="px-3 py-1 bg-green-600 hover:bg-green-700 text-white rounded text-xs transition-colors">
+                          Receive
+                        </button>
+                        <button 
+                          (click)="cancelOrder(order.id)"
+                          class="px-3 py-1 bg-orange-600 hover:bg-orange-700 text-white rounded text-xs transition-colors">
+                          Cancel
+                        </button>
+                      }
+
+                      @if (order.status === PurchaseOrderStatus.CANCELED) {
+                        <button 
+                          (click)="deleteOrder(order.id)"
+                          class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded text-xs transition-colors">
+                          Delete
+                        </button>
+                      }
+                    </div>
+                  </td>
+                </tr>
+              } @empty {
+                <tr>
+                  <td colspan="8" class="px-6 py-8 text-center text-gray-400">
+                    No purchase orders found
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    }
+  </div>
+
+  <!-- Create/Edit Modal -->
+  @if (showModal()) {
+    <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div class="bg-gray-800 rounded-lg shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto modal-scale-in">
+        <div class="sticky top-0 bg-gray-800 border-b border-gray-700 px-6 py-4 flex justify-between items-center">
+          <h2 class="text-2xl font-bold text-white">
+            {{ isEditMode() ? 'Edit Purchase Order' : 'Add Purchase Order' }}
+          </h2>
+          <button 
+            (click)="closeModal()"
+            class="text-gray-400 hover:text-white transition-colors">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+
+        <div class="p-6">
+          @if (errorMessage()) {
+            <div class="mb-4 p-4 bg-red-900/50 border border-red-500 rounded-lg text-red-200">
+              {{ errorMessage() }}
+            </div>
+          }
+
+          <form>
+            <!-- Supplier -->
+            <div class="mb-4">
+              <label class="block text-gray-300 text-sm font-medium mb-2">Supplier *</label>
+              <select 
+                [value]="orderForm().supplierId"
+                (change)="updateFormField('supplierId', +$any($event.target).value)"
+                class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <option value="0">Select Supplier</option>
+                @for (supplier of suppliers(); track supplier.id) {
+                  <option [value]="supplier.id">{{ supplier.name }}</option>
+                }
+              </select>
+              @if (validationErrors()['supplierId']) {
+                <p class="text-red-400 text-sm mt-1">{{ validationErrors()['supplierId'] }}</p>
+              }
+            </div>
+
+            <!-- Expected Delivery -->
+            <div class="mb-4">
+              <label class="block text-gray-300 text-sm font-medium mb-2">Expected Delivery</label>
+              <input 
+                type="date"
+                [value]="orderForm().expectedDelivery"
+                (input)="updateFormField('expectedDelivery', $any($event.target).value)"
+                class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500" />
+              @if (validationErrors()['expectedDelivery']) {
+                <p class="text-red-400 text-sm mt-1">{{ validationErrors()['expectedDelivery'] }}</p>
+              }
+            </div>
+
+            <!-- Order Lines Section -->
+            <div class="mb-6">
+              <h3 class="text-lg font-semibold text-white mb-4">Order Lines</h3>
+              
+              <!-- Add Line Form -->
+              <div class="bg-gray-700 p-4 rounded-lg mb-4">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                  <div>
+                    <label class="block text-gray-300 text-sm font-medium mb-2">Product *</label>
+                    <select 
+                      [value]="currentLine().productId"
+                      (change)="updateLineField('productId', +$any($event.target).value)"
+                      class="w-full px-3 py-2 bg-gray-600 border border-gray-500 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      [ngClass]="{'border-red-500': validationErrors()['lineProductId']}">
+                      <option value="0">Select Product</option>
+                      @for (product of products(); track product.id) {
+                        <option [value]="product.id">{{ product.name }}</option>
+                      }
+                    </select>
+                    @if (validationErrors()['lineProductId']) {
+                      <p class="text-red-400 text-xs mt-1">{{ validationErrors()['lineProductId'] }}</p>
+                    }
+                  </div>
+                  <div>
+                    <label class="block text-gray-300 text-sm font-medium mb-2">Quantity *</label>
+                    <input 
+                      type="number"
+                      min="1"
+                      [value]="currentLine().quantity"
+                      (input)="updateLineField('quantity', +$any($event.target).value)"
+                      class="w-full px-3 py-2 bg-gray-600 border border-gray-500 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      [ngClass]="{'border-red-500': validationErrors()['lineQuantity']}" />
+                    @if (validationErrors()['lineQuantity']) {
+                      <p class="text-red-400 text-xs mt-1">{{ validationErrors()['lineQuantity'] }}</p>
+                    }
+                  </div>
+                  <div>
+                    <label class="block text-gray-300 text-sm font-medium mb-2">Unit Price *</label>
+                    <input 
+                      type="number"
+                      step="0.01"
+                      min="0.01"
+                      [value]="currentLine().unitPrice"
+                      (input)="updateLineField('unitPrice', +$any($event.target).value)"
+                      class="w-full px-3 py-2 bg-gray-600 border border-gray-500 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      [ngClass]="{'border-red-500': validationErrors()['lineUnitPrice']}" />
+                    @if (validationErrors()['lineUnitPrice']) {
+                      <p class="text-red-400 text-xs mt-1">{{ validationErrors()['lineUnitPrice'] }}</p>
+                    }
+                  </div>
+                  <div class="flex items-end">
+                    <button 
+                      type="button"
+                      (click)="addLine()"
+                      class="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors">
+                      Add Line
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Lines List -->
+              @if (orderLines().length > 0) {
+                <div class="space-y-2">
+                  @for (line of orderLines(); track $index) {
+                    <div class="bg-gray-700 p-3 rounded-lg flex justify-between items-center">
+                      <div class="flex-1 grid grid-cols-4 gap-4 text-sm">
+                        <div>
+                          <span class="text-gray-400">Product:</span>
+                          <span class="text-white ml-2">{{ getProductName(line.productId) }}</span>
+                        </div>
+                        <div>
+                          <span class="text-gray-400">Quantity:</span>
+                          <span class="text-white ml-2">{{ line.quantity }}</span>
+                        </div>
+                        <div>
+                          <span class="text-gray-400">Unit Price:</span>
+                          <span class="text-white ml-2">{{ formatPrice(line.unitPrice) }}</span>
+                        </div>
+                        <div>
+                          <span class="text-gray-400">Total:</span>
+                          <span class="text-green-400 ml-2 font-semibold">{{ formatPrice(line.quantity * line.unitPrice) }}</span>
+                        </div>
+                      </div>
+                      <button 
+                        type="button"
+                        (click)="removeLine($index)"
+                        class="ml-4 px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded text-xs transition-colors">
+                        Remove
+                      </button>
+                    </div>
+                  }
+                </div>
+              } @else {
+                <p class="text-gray-400 text-center py-4">No order lines added yet</p>
+              }
+              @if (validationErrors()['orderLines']) {
+                <p class="text-red-400 text-sm mt-2">{{ validationErrors()['orderLines'] }}</p>
+              }
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex gap-4">
+              <button 
+                type="button"
+                (click)="saveOrder()"
+                [disabled]="loading()"
+                class="flex-1 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                {{ loading() ? 'Saving...' : (isEditMode() ? 'Update' : 'Create') }}
+              </button>
+              <button 
+                type="button"
+                (click)="closeModal()"
+                class="px-6 py-3 bg-gray-600 hover:bg-gray-700 text-white rounded-lg font-medium transition-colors">
+                Cancel
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Details Modal -->
+  @if (showDetailsModal() && selectedOrder()) {
+    <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div class="bg-gray-800 rounded-lg shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto modal-scale-in">
+        <div class="sticky top-0 bg-gray-800 border-b border-gray-700 px-6 py-4 flex justify-between items-center">
+          <h2 class="text-2xl font-bold text-white">Purchase Order #{{ selectedOrder()!.id }}</h2>
+          <button 
+            (click)="closeDetailsModal()"
+            class="text-gray-400 hover:text-white transition-colors">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+
+        <div class="p-6">
+          <!-- Order Info -->
+          <div class="grid grid-cols-2 gap-4 mb-6">
+            <div>
+              <p class="text-gray-400 text-sm">Supplier</p>
+              <p class="text-white font-semibold">{{ selectedOrder()!.supplierName }}</p>
+            </div>
+            <div>
+              <p class="text-gray-400 text-sm">Status</p>
+              <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold" [ngClass]="getStatusColor(selectedOrder()!.status)">
+                {{ selectedOrder()!.status }}
+              </span>
+            </div>
+            <div>
+              <p class="text-gray-400 text-sm">Created</p>
+              <p class="text-white">{{ formatDate(selectedOrder()!.createdAt) }}</p>
+            </div>
+            <div>
+              <p class="text-gray-400 text-sm">Expected Delivery</p>
+              <p class="text-white">{{ formatDate(selectedOrder()!.expectedDelivery) }}</p>
+            </div>
+            @if (selectedOrder()!.approvedAt) {
+              <div>
+                <p class="text-gray-400 text-sm">Approved</p>
+                <p class="text-white">{{ formatDate(selectedOrder()!.approvedAt) }}</p>
+              </div>
+            }
+            @if (selectedOrder()!.receivedAt) {
+              <div>
+                <p class="text-gray-400 text-sm">Received</p>
+                <p class="text-white">{{ formatDate(selectedOrder()!.receivedAt) }}</p>
+              </div>
+            }
+            @if (selectedOrder()!.canceledAt) {
+              <div>
+                <p class="text-gray-400 text-sm">Canceled</p>
+                <p class="text-white">{{ formatDate(selectedOrder()!.canceledAt) }}</p>
+              </div>
+            }
+          </div>
+
+          <!-- Order Lines -->
+          <h3 class="text-lg font-semibold text-white mb-4">Order Lines</h3>
+          <div class="space-y-2 mb-6">
+            @for (line of selectedOrder()!.orderLines; track $index) {
+              <div class="bg-gray-700 p-4 rounded-lg">
+                <div class="grid grid-cols-2 gap-4">
+                  <div>
+                    <p class="text-gray-400 text-sm">Product</p>
+                    <p class="text-white font-medium">{{ line.productName }}</p>
+                    <p class="text-gray-400 text-xs">SKU: {{ line.productSku }}</p>
+                  </div>
+                  <div>
+                    <p class="text-gray-400 text-sm">Quantity</p>
+                    <p class="text-white">{{ line.quantity }}</p>
+                  </div>
+                  <div>
+                    <p class="text-gray-400 text-sm">Unit Price</p>
+                    <p class="text-white">{{ formatPrice(line.unitPrice) }}</p>
+                  </div>
+                  <div>
+                    <p class="text-gray-400 text-sm">Total</p>
+                    <p class="text-green-400 font-semibold">{{ formatPrice(line.totalPrice) }}</p>
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+
+          <!-- Total -->
+          <div class="border-t border-gray-700 pt-4">
+            <div class="flex justify-between items-center">
+              <div>
+                <p class="text-gray-400">Total Items</p>
+                <p class="text-white font-semibold">{{ selectedOrder()!.totalItems }}</p>
+              </div>
+              <div class="text-right">
+                <p class="text-gray-400">Total Amount</p>
+                <p class="text-green-400 text-2xl font-bold">{{ formatPrice(selectedOrder()!.totalAmount) }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Receive Modal -->
+  @if (showReceiveModal() && selectedOrder()) {
+    <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div class="bg-gray-800 rounded-lg shadow-2xl w-full max-w-md modal-scale-in">
+        <div class="bg-gray-800 border-b border-gray-700 px-6 py-4 flex justify-between items-center">
+          <h2 class="text-xl font-bold text-white">Receive Purchase Order</h2>
+          <button 
+            (click)="closeReceiveModal()"
+            class="text-gray-400 hover:text-white transition-colors">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+
+        <div class="p-6">
+          <p class="text-gray-300 mb-4">Select the warehouse where the items will be received:</p>
+          
+          <div class="mb-6">
+            <label class="block text-gray-300 text-sm font-medium mb-2">Warehouse *</label>
+            <select 
+              [value]="selectedWarehouseId()"
+              (change)="selectedWarehouseId.set(+$any($event.target).value)"
+              class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <option value="0">Select Warehouse</option>
+              @for (warehouse of warehouses(); track warehouse.id) {
+                <option [value]="warehouse.id">{{ warehouse.name }} ({{ warehouse.code }})</option>
+              }
+            </select>
+          </div>
+
+          <div class="flex gap-4">
+            <button 
+              type="button"
+              (click)="receiveOrder()"
+              [disabled]="selectedWarehouseId() === 0"
+              class="flex-1 px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+              Receive Order
+            </button>
+            <button 
+              type="button"
+              (click)="closeReceiveModal()"
+              class="px-6 py-3 bg-gray-600 hover:bg-gray-700 text-white rounded-lg font-medium transition-colors">
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+</div>
