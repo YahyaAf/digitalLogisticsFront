@@ -1,0 +1,624 @@
+<div class="container mx-auto px-4 py-8">
+  <!-- Header -->
+  <div class="mb-8 flex items-center justify-between">
+    <div>
+      <h1 class="text-3xl font-bold text-gray-900 mb-2">Gestion des Transporteurs</h1>
+      <p class="text-gray-600">Gérez vos transporteurs et leurs capacités</p>
+    </div>
+    <div class="flex space-x-3">
+      <button
+        (click)="resetDailyShipments()"
+        class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors flex items-center space-x-2"
+      >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+        </svg>
+        <span>Réinitialiser compteurs</span>
+      </button>
+      <button
+        (click)="openCreateModal()"
+        class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center space-x-2"
+      >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+        </svg>
+        <span>Nouveau transporteur</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Success Message -->
+  @if (successMessage()) {
+    <div class="mb-6 bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg flex items-center justify-between">
+      <span>{{ successMessage() }}</span>
+      <button (click)="successMessage.set(null)" class="text-green-800 hover:text-green-900">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+  }
+
+  <!-- Error Message -->
+  @if (error()) {
+    <div class="mb-6 bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg flex items-center justify-between">
+      <span>{{ error() }}</span>
+      <button (click)="error.set(null)" class="text-red-800 hover:text-red-900">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+  }
+
+  <!-- Filters -->
+  <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <!-- Search -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Rechercher</label>
+        <input
+          type="text"
+          [value]="searchQuery()"
+          (input)="onSearchChange($any($event.target).value)"
+          placeholder="Code, Nom, Email..."
+          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        />
+      </div>
+
+      <!-- Status Filter -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Statut</label>
+        <select
+          [value]="statusFilter()"
+          (change)="onStatusFilterChange($any($event.target).value)"
+          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        >
+          <option value="ALL">Tous les statuts</option>
+          <option [value]="CarrierStatus.ACTIVE">Actif</option>
+          <option [value]="CarrierStatus.INACTIVE">Inactif</option>
+          <option [value]="CarrierStatus.SUSPENDED">Suspendu</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Carriers Table -->
+  <div class="bg-white rounded-lg shadow-md overflow-hidden">
+    @if (loading()) {
+      <div class="flex items-center justify-center py-12">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
+    } @else if (filteredCarriers().length === 0) {
+      <div class="text-center py-12">
+        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"/>
+        </svg>
+        <h3 class="mt-2 text-sm font-medium text-gray-900">Aucun transporteur</h3>
+        <p class="mt-1 text-sm text-gray-500">Commencez par créer un transporteur.</p>
+      </div>
+    } @else {
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Code</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nom</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contact</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tarif base</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Capacité</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            @for (carrier of filteredCarriers(); track carrier.id) {
+              <tr class="hover:bg-gray-50 transition-colors">
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                  {{ carrier.code }}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  {{ carrier.name }}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-gray-900">{{ carrier.contactEmail }}</div>
+                  <div class="text-sm text-gray-500">{{ carrier.contactPhone }}</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  {{ formatPrice(carrier.baseShippingRate) }}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm font-semibold" [class]="getCapacityColor(carrier)">
+                    {{ carrier.currentDailyShipments }} / {{ carrier.maxDailyCapacity }}
+                  </div>
+                  <div class="text-xs text-gray-500">
+                    Disponible: {{ carrier.availableCapacity }}
+                  </div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span [class]="'px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ' + getStatusColor(carrier.status)">
+                    {{ getStatusLabel(carrier.status) }}
+                  </span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                  <button
+                    (click)="viewCarrierDetails(carrier)"
+                    class="text-blue-600 hover:text-blue-900"
+                    title="Voir détails"
+                  >
+                    <svg class="w-5 h-5 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                    </svg>
+                  </button>
+
+                  <button
+                    (click)="openEditModal(carrier)"
+                    class="text-purple-600 hover:text-purple-900"
+                    title="Modifier"
+                  >
+                    <svg class="w-5 h-5 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                    </svg>
+                  </button>
+
+                  <button
+                    (click)="deleteCarrier(carrier.id)"
+                    class="text-red-600 hover:text-red-900"
+                    title="Supprimer"
+                  >
+                    <svg class="w-5 h-5 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                    </svg>
+                  </button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+</div>
+
+<!-- Create Modal -->
+@if (showCreateModal()) {
+  <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+      <div class="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
+        <h3 class="text-xl font-semibold text-gray-900">Nouveau transporteur</h3>
+        <button (click)="closeCreateModal()" class="text-gray-400 hover:text-gray-600">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="px-6 py-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Code *</label>
+            <input
+              type="text"
+              [(ngModel)]="carrierForm().code"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              placeholder="CAR-001"
+            />
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Nom *</label>
+            <input
+              type="text"
+              [(ngModel)]="carrierForm().name"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              placeholder="DHL Express"
+            />
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+            <input
+              type="email"
+              [(ngModel)]="carrierForm().contactEmail"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              placeholder="contact@carrier.com"
+            />
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Téléphone</label>
+            <input
+              type="tel"
+              [(ngModel)]="carrierForm().contactPhone"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              placeholder="+212XXXXXXXXX"
+            />
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Tarif base (MAD)</label>
+            <input
+              type="number"
+              [(ngModel)]="carrierForm().baseShippingRate"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              min="0"
+              step="0.01"
+            />
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Capacité journalière</label>
+            <input
+              type="number"
+              [(ngModel)]="carrierForm().maxDailyCapacity"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              min="1"
+            />
+          </div>
+
+          <div class="md:col-span-2">
+            <label class="block text-sm font-medium text-gray-700 mb-2">Heure limite (Cut-off time)</label>
+            <input
+              type="time"
+              [(ngModel)]="carrierForm().cutOffTime"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="border-t border-gray-200 px-6 py-4 flex justify-end space-x-3">
+        <button
+          (click)="closeCreateModal()"
+          class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
+        >
+          Annuler
+        </button>
+        <button
+          (click)="createCarrier()"
+          class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+        >
+          Créer
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Edit Modal -->
+@if (showEditModal() && selectedCarrier()) {
+  <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+      <div class="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
+        <h3 class="text-xl font-semibold text-gray-900">Modifier le transporteur</h3>
+        <button (click)="closeEditModal()" class="text-gray-400 hover:text-gray-600">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="px-6 py-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Code *</label>
+            <input
+              type="text"
+              [(ngModel)]="carrierForm().code"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Nom *</label>
+            <input
+              type="text"
+              [(ngModel)]="carrierForm().name"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+            <input
+              type="email"
+              [(ngModel)]="carrierForm().contactEmail"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Téléphone</label>
+            <input
+              type="tel"
+              [(ngModel)]="carrierForm().contactPhone"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Tarif base (MAD)</label>
+            <input
+              type="number"
+              [(ngModel)]="carrierForm().baseShippingRate"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              min="0"
+              step="0.01"
+            />
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Capacité journalière</label>
+            <input
+              type="number"
+              [(ngModel)]="carrierForm().maxDailyCapacity"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              min="1"
+            />
+          </div>
+
+          <div class="md:col-span-2">
+            <label class="block text-sm font-medium text-gray-700 mb-2">Heure limite (Cut-off time)</label>
+            <input
+              type="time"
+              [(ngModel)]="carrierForm().cutOffTime"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="border-t border-gray-200 px-6 py-4 flex justify-end space-x-3">
+        <button
+          (click)="closeEditModal()"
+          class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
+        >
+          Annuler
+        </button>
+        <button
+          (click)="updateCarrier()"
+          class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+        >
+          Enregistrer
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Details Modal -->
+@if (showDetailsModal() && selectedCarrier()) {
+  <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-lg max-w-3xl w-full max-h-[90vh] overflow-y-auto">
+      <div class="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
+        <h3 class="text-xl font-semibold text-gray-900">Détails du transporteur</h3>
+        <button (click)="closeDetailsModal()" class="text-gray-400 hover:text-gray-600">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="px-6 py-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <h4 class="text-sm font-medium text-gray-500 mb-2">Code</h4>
+            <p class="text-lg font-semibold text-gray-900">{{ selectedCarrier()!.code }}</p>
+          </div>
+
+          <div>
+            <h4 class="text-sm font-medium text-gray-500 mb-2">Nom</h4>
+            <p class="text-lg font-semibold text-gray-900">{{ selectedCarrier()!.name }}</p>
+          </div>
+
+          <div>
+            <h4 class="text-sm font-medium text-gray-500 mb-2">Email</h4>
+            <p class="text-gray-900">{{ selectedCarrier()!.contactEmail }}</p>
+          </div>
+
+          <div>
+            <h4 class="text-sm font-medium text-gray-500 mb-2">Téléphone</h4>
+            <p class="text-gray-900">{{ selectedCarrier()!.contactPhone }}</p>
+          </div>
+
+          <div>
+            <h4 class="text-sm font-medium text-gray-500 mb-2">Tarif base</h4>
+            <p class="text-lg font-bold text-blue-600">{{ formatPrice(selectedCarrier()!.baseShippingRate) }}</p>
+          </div>
+
+          <div>
+            <h4 class="text-sm font-medium text-gray-500 mb-2">Heure limite</h4>
+            <p class="text-gray-900">{{ formatTime(selectedCarrier()!.cutOffTime) }}</p>
+          </div>
+
+          <div>
+            <h4 class="text-sm font-medium text-gray-500 mb-2">Capacité</h4>
+            <p class="text-lg font-bold" [class]="getCapacityColor(selectedCarrier()!)">
+              {{ selectedCarrier()!.currentDailyShipments }} / {{ selectedCarrier()!.maxDailyCapacity }}
+            </p>
+            <p class="text-sm text-gray-500">Disponible: {{ selectedCarrier()!.availableCapacity }}</p>
+          </div>
+
+          <div>
+            <h4 class="text-sm font-medium text-gray-500 mb-2">Statut</h4>
+            <span [class]="'px-3 py-1 inline-flex text-sm font-semibold rounded-full ' + getStatusColor(selectedCarrier()!.status)">
+              {{ getStatusLabel(selectedCarrier()!.status) }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="mt-6 flex flex-wrap gap-3 border-t pt-4">
+          @if (selectedCarrier()!.status !== CarrierStatus.ACTIVE) {
+            <button
+              (click)="updateCarrierStatus(selectedCarrier()!.id, CarrierStatus.ACTIVE)"
+              class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+            >
+              Activer
+            </button>
+          }
+
+          @if (selectedCarrier()!.status === CarrierStatus.ACTIVE) {
+            <button
+              (click)="updateCarrierStatus(selectedCarrier()!.id, CarrierStatus.SUSPENDED)"
+              class="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700"
+            >
+              Suspendre
+            </button>
+          }
+
+          @if (selectedCarrier()!.status !== CarrierStatus.INACTIVE) {
+            <button
+              (click)="updateCarrierStatus(selectedCarrier()!.id, CarrierStatus.INACTIVE)"
+              class="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700"
+            >
+              Désactiver
+            </button>
+          }
+
+          <button
+            (click)="openAssignShipmentsModal(selectedCarrier()!)"
+            class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+          >
+            Assigner expéditions
+          </button>
+
+          <button
+            (click)="openEditModal(selectedCarrier()!)"
+            class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700"
+          >
+            Modifier
+          </button>
+
+          <button
+            (click)="deleteCarrier(selectedCarrier()!.id)"
+            class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+          >
+            Supprimer
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Assign Shipments Modal -->
+@if (showAssignShipmentsModal()) {
+  <div class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+    <div class="relative top-20 mx-auto p-5 border w-3/4 max-w-4xl shadow-lg rounded-md bg-white">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-lg font-medium">
+          Assigner des expéditions - {{ selectedCarrier()?.name }}
+        </h3>
+        <button
+          (click)="closeAssignShipmentsModal()"
+          class="text-gray-500 hover:text-gray-700"
+        >
+          ✕
+        </button>
+      </div>
+
+      <div class="mb-4 p-4 bg-blue-50 rounded-lg">
+        <p class="text-sm text-gray-700">
+          <span class="font-semibold">Capacité disponible:</span> 
+          {{ selectedCarrier()?.availableCapacity }} / {{ selectedCarrier()?.maxDailyCapacity }}
+        </p>
+        <p class="text-sm text-gray-700 mt-1">
+          <span class="font-semibold">Sélectionné:</span> 
+          {{ selectedShipmentIds().length }} expédition(s)
+        </p>
+      </div>
+
+      @if (error()) {
+        <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-4">
+          {{ error() }}
+        </div>
+      }
+
+      @if (loading()) {
+        <div class="text-center py-8">
+          <p class="text-gray-600">Chargement...</p>
+        </div>
+      } @else if (availableShipments().length === 0) {
+        <div class="text-center py-8">
+          <p class="text-gray-500">Aucune expédition planifiée disponible</p>
+        </div>
+      } @else {
+        <div class="max-h-96 overflow-y-auto">
+          <table class="min-w-full bg-white">
+            <thead class="bg-gray-50 sticky top-0">
+              <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  <input 
+                    type="checkbox"
+                    [checked]="isAllShipmentsSelected()"
+                    (change)="toggleSelectAll()"
+                    class="rounded"
+                  />
+                </th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">N° Suivi</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Commande</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date prévue</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Destination</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Statut</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
+              @for (shipment of availableShipments(); track shipment.id) {
+                <tr class="hover:bg-gray-50 cursor-pointer" (click)="toggleShipmentSelection(shipment.id)">
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <input 
+                      type="checkbox"
+                      [checked]="isShipmentSelected(shipment.id)"
+                      (click)="$event.stopPropagation()"
+                      (change)="toggleShipmentSelection(shipment.id)"
+                      class="rounded"
+                    />
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                    {{ shipment.trackingNumber }}
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                    #{{ shipment.salesOrderId }}
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                    {{ shipment.plannedDate | date:'dd/MM/yyyy' }}
+                  </td>
+                  <td class="px-6 py-4 text-sm text-gray-600">
+                    {{ shipment.clientAddress }}
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span [class]="'px-2 py-1 text-xs rounded-full ' + getShipmentStatusColor(shipment.status)">
+                      {{ getShipmentStatusLabel(shipment.status) }}
+                    </span>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+
+      <div class="flex justify-end space-x-2 mt-6">
+        <button
+          (click)="closeAssignShipmentsModal()"
+          class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400"
+        >
+          Annuler
+        </button>
+        <button
+          (click)="assignSelectedShipments()"
+          [disabled]="loading() || selectedShipmentIds().length === 0 || selectedShipmentIds().length > (selectedCarrier()?.availableCapacity || 0)"
+          class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
+        >
+          @if (loading()) {
+            <span>Assignation...</span>
+          } @else {
+            <span>Assigner ({{ selectedShipmentIds().length }})</span>
+          }
+        </button>
+      </div>
+    </div>
+  </div>
+}

@@ -24,6 +24,8 @@ import { FooterComponent } from './features/landing/footer/footer.component';
 import { HomeComponent } from './features/landing/home/home.component';
 import { SalesOrdersComponent } from './features/landing/sales-orders/sales-orders.component';
 import { DashboardSalesOrdersComponent } from './features/dashboard/sales-orders/sales-orders.component';
+import { ShipmentsComponent } from './features/dashboard/shipments/shipments.component';
+import { CarriersComponent } from './features/dashboard/carriers/carriers.component';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
 
 @NgModule({
@@ -46,7 +48,9 @@ import { authInterceptor } from './core/interceptors/auth.interceptor';
     FooterComponent,
     HomeComponent,
     SalesOrdersComponent,
-    DashboardSalesOrdersComponent
+    DashboardSalesOrdersComponent,
+    ShipmentsComponent,
+    CarriersComponent
   ],
   imports: [
     BrowserModule,

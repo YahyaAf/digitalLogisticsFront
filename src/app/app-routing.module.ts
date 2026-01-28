@@ -15,6 +15,8 @@ import { PurchaseOrdersComponent } from './features/dashboard/purchase-orders/pu
 import { HomeComponent } from './features/landing/home/home.component';
 import { SalesOrdersComponent } from './features/landing/sales-orders/sales-orders.component';
 import { DashboardSalesOrdersComponent } from './features/dashboard/sales-orders/sales-orders.component';
+import { ShipmentsComponent } from './features/dashboard/shipments/shipments.component';
+import { CarriersComponent } from './features/dashboard/carriers/carriers.component';
 import { authGuard } from './core/guards/auth.guard';
 
 const routes: Routes = [
@@ -38,6 +40,8 @@ const routes: Routes = [
       { path: 'inventory-movements', component: InventoryMovementsComponent },
       { path: 'purchase-orders', component: PurchaseOrdersComponent },
       { path: 'sales-orders', component: DashboardSalesOrdersComponent },
+      { path: 'shipments', component: ShipmentsComponent },
+      { path: 'carriers', component: CarriersComponent },
     ]
   }
 ];

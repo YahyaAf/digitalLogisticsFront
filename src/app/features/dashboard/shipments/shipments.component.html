@@ -1,0 +1,408 @@
+<div class="container mx-auto px-4 py-8">
+  <!-- Header -->
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-900 mb-2">Gestion des Expéditions</h1>
+    <p class="text-gray-600">Suivez et gérez toutes les expéditions</p>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+    <div class="bg-white rounded-lg shadow-md p-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm text-gray-600 mb-1">Total</p>
+          <p class="text-3xl font-bold text-gray-900">{{ stats().total }}</p>
+        </div>
+        <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+          <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-md p-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm text-gray-600 mb-1">Planifiées</p>
+          <p class="text-3xl font-bold text-blue-600">{{ stats().planned }}</p>
+        </div>
+        <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+          <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-md p-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm text-gray-600 mb-1">En transit</p>
+          <p class="text-3xl font-bold text-yellow-600">{{ stats().inTransit }}</p>
+        </div>
+        <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
+          <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-md p-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm text-gray-600 mb-1">Livrées</p>
+          <p class="text-3xl font-bold text-green-600">{{ stats().delivered }}</p>
+        </div>
+        <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+          <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Success Message -->
+  @if (successMessage()) {
+    <div class="mb-6 bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg flex items-center justify-between">
+      <span>{{ successMessage() }}</span>
+      <button (click)="successMessage.set(null)" class="text-green-800 hover:text-green-900">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+  }
+
+  <!-- Error Message -->
+  @if (error()) {
+    <div class="mb-6 bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg flex items-center justify-between">
+      <span>{{ error() }}</span>
+      <button (click)="error.set(null)" class="text-red-800 hover:text-red-900">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+  }
+
+  <!-- Filters -->
+  <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <!-- Search -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Rechercher</label>
+        <input
+          type="text"
+          [value]="searchQuery()"
+          (input)="onSearchChange($any($event.target).value)"
+          placeholder="ID, Tracking, Client, Transporteur..."
+          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        />
+      </div>
+
+      <!-- Status Filter -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Statut</label>
+        <select
+          [value]="statusFilter()"
+          (change)="onStatusFilterChange($any($event.target).value)"
+          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        >
+          <option value="ALL">Tous les statuts</option>
+          <option [value]="ShipmentStatus.PLANNED">Planifiée</option>
+          <option [value]="ShipmentStatus.IN_TRANSIT">En transit</option>
+          <option [value]="ShipmentStatus.DELIVERED">Livrée</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Shipments Table -->
+  <div class="bg-white rounded-lg shadow-md overflow-hidden">
+    @if (loading()) {
+      <div class="flex items-center justify-center py-12">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
+    } @else if (filteredShipments().length === 0) {
+      <div class="text-center py-12">
+        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+        </svg>
+        <h3 class="mt-2 text-sm font-medium text-gray-900">Aucune expédition</h3>
+        <p class="mt-1 text-sm text-gray-500">Aucune expédition ne correspond aux critères de recherche.</p>
+      </div>
+    } @else {
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tracking</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Client</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Transporteur</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date prévue</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            @for (shipment of filteredShipments(); track shipment.id) {
+              <tr class="hover:bg-gray-50 transition-colors">
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                  #{{ shipment.id }}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span class="text-sm font-mono text-blue-600">{{ shipment.trackingNumber }}</span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm font-medium text-gray-900">{{ shipment.clientName }}</div>
+                  <div class="text-sm text-gray-500">{{ shipment.clientEmail }}</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                  {{ shipment.carrierName || '-' }}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  {{ formatDate(shipment.plannedDate) }}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span [class]="'px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ' + getStatusColor(shipment.status)">
+                    {{ getStatusLabel(shipment.status) }}
+                  </span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                  <button
+                    (click)="viewShipmentDetails(shipment)"
+                    class="text-blue-600 hover:text-blue-900"
+                    title="Voir détails"
+                  >
+                    <svg class="w-5 h-5 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                    </svg>
+                  </button>
+
+                  @if (canMarkInTransit(shipment)) {
+                    <button
+                      (click)="markAsInTransit(shipment.id)"
+                      class="text-yellow-600 hover:text-yellow-900"
+                      title="Marquer en transit"
+                    >
+                      <svg class="w-5 h-5 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"/>
+                      </svg>
+                    </button>
+                  }
+
+                  @if (canMarkDelivered(shipment)) {
+                    <button
+                      (click)="markAsDelivered(shipment.id)"
+                      class="text-green-600 hover:text-green-900"
+                      title="Marquer livrée"
+                    >
+                      <svg class="w-5 h-5 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                      </svg>
+                    </button>
+                  }
+
+                  @if (canUpdateDate(shipment)) {
+                    <button
+                      (click)="openUpdateDateModal(shipment)"
+                      class="text-purple-600 hover:text-purple-900"
+                      title="Modifier date"
+                    >
+                      <svg class="w-5 h-5 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                      </svg>
+                    </button>
+                  }
+
+                  @if (canDelete(shipment)) {
+                    <button
+                      (click)="deleteShipment(shipment.id)"
+                      class="text-red-600 hover:text-red-900"
+                      title="Supprimer"
+                    >
+                      <svg class="w-5 h-5 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                      </svg>
+                    </button>
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+</div>
+
+<!-- Shipment Details Modal -->
+@if (showDetailsModal() && selectedShipment()) {
+  <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-lg max-w-3xl w-full max-h-[90vh] overflow-y-auto">
+      <!-- Modal Header -->
+      <div class="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
+        <h3 class="text-xl font-semibold text-gray-900">Détails de l'expédition #{{ selectedShipment()!.id }}</h3>
+        <button
+          (click)="closeDetailsModal()"
+          class="text-gray-400 hover:text-gray-600"
+        >
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="px-6 py-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Tracking Info -->
+          <div>
+            <h4 class="text-sm font-medium text-gray-500 mb-2">Numéro de suivi</h4>
+            <p class="text-lg font-mono font-semibold text-blue-600">{{ selectedShipment()!.trackingNumber }}</p>
+          </div>
+
+          <!-- Status -->
+          <div>
+            <h4 class="text-sm font-medium text-gray-500 mb-2">Statut</h4>
+            <span [class]="'px-3 py-1 inline-flex text-sm font-semibold rounded-full ' + getStatusColor(selectedShipment()!.status)">
+              {{ getStatusLabel(selectedShipment()!.status) }}
+            </span>
+          </div>
+
+          <!-- Client Info -->
+          <div class="md:col-span-2">
+            <h4 class="text-sm font-medium text-gray-500 mb-2">Informations Client</h4>
+            <p class="text-lg font-semibold text-gray-900">{{ selectedShipment()!.clientName }}</p>
+            <p class="text-sm text-gray-600">{{ selectedShipment()!.clientEmail }}</p>
+            <p class="text-sm text-gray-600">{{ selectedShipment()!.clientPhoneNumber }}</p>
+            <p class="text-sm text-gray-600 mt-1">{{ selectedShipment()!.clientAddress }}</p>
+          </div>
+
+          <!-- Carrier Info -->
+          <div>
+            <h4 class="text-sm font-medium text-gray-500 mb-2">Transporteur</h4>
+            <p class="text-gray-900">{{ selectedShipment()!.carrierName || 'Non assigné' }}</p>
+            @if (selectedShipment()!.carrierCode) {
+              <p class="text-sm text-gray-500">Code: {{ selectedShipment()!.carrierCode }}</p>
+            }
+          </div>
+
+          <!-- Sales Order -->
+          <div>
+            <h4 class="text-sm font-medium text-gray-500 mb-2">Commande liée</h4>
+            <p class="text-gray-900">Commande #{{ selectedShipment()!.salesOrderId }}</p>
+          </div>
+
+          <!-- Dates -->
+          <div>
+            <h4 class="text-sm font-medium text-gray-500 mb-2">Date de création</h4>
+            <p class="text-gray-900">{{ formatDate(selectedShipment()!.createdAt) }}</p>
+          </div>
+
+          <div>
+            <h4 class="text-sm font-medium text-gray-500 mb-2">Date prévue</h4>
+            <p class="text-gray-900">{{ formatDate(selectedShipment()!.plannedDate) }}</p>
+          </div>
+
+          @if (selectedShipment()!.shippedDate) {
+            <div>
+              <h4 class="text-sm font-medium text-gray-500 mb-2">Date d'expédition</h4>
+              <p class="text-gray-900">{{ formatDate(selectedShipment()!.shippedDate) }}</p>
+            </div>
+          }
+
+          @if (selectedShipment()!.deliveredDate) {
+            <div>
+              <h4 class="text-sm font-medium text-gray-500 mb-2">Date de livraison</h4>
+              <p class="text-gray-900">{{ formatDate(selectedShipment()!.deliveredDate) }}</p>
+            </div>
+          }
+        </div>
+
+        <!-- Actions -->
+        <div class="mt-6 flex flex-wrap gap-3 border-t pt-4">
+          @if (canMarkInTransit(selectedShipment()!)) {
+            <button
+              (click)="markAsInTransit(selectedShipment()!.id)"
+              class="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors"
+            >
+              Marquer en transit
+            </button>
+          }
+
+          @if (canMarkDelivered(selectedShipment()!)) {
+            <button
+              (click)="markAsDelivered(selectedShipment()!.id)"
+              class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+            >
+              Marquer comme livrée
+            </button>
+          }
+
+          @if (canUpdateDate(selectedShipment()!)) {
+            <button
+              (click)="openUpdateDateModal(selectedShipment()!)"
+              class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+            >
+              Modifier la date
+            </button>
+          }
+
+          @if (canDelete(selectedShipment()!)) {
+            <button
+              (click)="deleteShipment(selectedShipment()!.id)"
+              class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+            >
+              Supprimer
+            </button>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Update Date Modal -->
+@if (showUpdateDateModal() && selectedShipment()) {
+  <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-lg max-w-md w-full">
+      <!-- Modal Header -->
+      <div class="border-b border-gray-200 px-6 py-4">
+        <h3 class="text-xl font-semibold text-gray-900">Modifier la date prévue</h3>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="px-6 py-4">
+        <label class="block text-sm font-medium text-gray-700 mb-2">Nouvelle date prévue</label>
+        <input
+          type="datetime-local"
+          [value]="newPlannedDate()"
+          (input)="newPlannedDate.set($any($event.target).value)"
+          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+        />
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="border-t border-gray-200 px-6 py-4 flex justify-end space-x-3">
+        <button
+          (click)="closeUpdateDateModal()"
+          class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+        >
+          Annuler
+        </button>
+        <button
+          (click)="updatePlannedDate()"
+          class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+        >
+          Confirmer
+        </button>
+      </div>
+    </div>
+  </div>
+}
