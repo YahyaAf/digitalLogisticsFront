@@ -13,12 +13,15 @@ import { InventoriesComponent } from './features/dashboard/inventories/inventori
 import { InventoryMovementsComponent } from './features/dashboard/inventory-movements/inventory-movements.component';
 import { PurchaseOrdersComponent } from './features/dashboard/purchase-orders/purchase-orders.component';
 import { HomeComponent } from './features/landing/home/home.component';
+import { SalesOrdersComponent } from './features/landing/sales-orders/sales-orders.component';
+import { DashboardSalesOrdersComponent } from './features/dashboard/sales-orders/sales-orders.component';
 import { authGuard } from './core/guards/auth.guard';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
+  { path: 'sales-orders', component: SalesOrdersComponent, canActivate: [authGuard] },
   { 
     path: 'dashboard', 
     component: DashboardLayoutComponent,
@@ -34,6 +37,7 @@ const routes: Routes = [
       { path: 'inventories', component: InventoriesComponent },
       { path: 'inventory-movements', component: InventoryMovementsComponent },
       { path: 'purchase-orders', component: PurchaseOrdersComponent },
+      { path: 'sales-orders', component: DashboardSalesOrdersComponent },
     ]
   }
 ];

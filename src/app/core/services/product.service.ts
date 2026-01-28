@@ -35,6 +35,10 @@ export class ProductService {
     return this.http.get<ApiResponse<ProductResponse[]>>(this.API_URL);
   }
 
+  getActiveProducts(): Observable<ApiResponse<ProductResponse[]>> {
+    return this.http.get<ApiResponse<ProductResponse[]>>(`${this.API_URL}/active`);
+  }
+
   getProductById(id: number): Observable<ApiResponse<ProductResponse>> {
     return this.http.get<ApiResponse<ProductResponse>>(`${this.API_URL}/${id}`);
   }

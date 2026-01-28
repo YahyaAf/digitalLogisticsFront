@@ -1,7 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { AuthService } from '../../core/services/auth.service';
 import { LoginRequest } from '../../core/models/auth.model';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -16,10 +16,12 @@ export class LoginComponent {
   successMessage = signal('');
   validationErrors = signal<{[key: string]: string}>({});
   isLoading = signal(false);
+  returnUrl = '/dashboard';
 
   constructor(
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {
     // Check if coming from registration with success message
     const navigation = this.router.getCurrentNavigation();
@@ -27,6 +29,9 @@ export class LoginComponent {
     if (state?.message) {
       this.successMessage.set(state.message);
     }
+
+    // Récupérer le returnUrl depuis les query params
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/dashboard';
   }
 
   onLogin(): void {
@@ -46,11 +51,11 @@ export class LoginComponent {
           // Charger les infos de l'utilisateur après login réussi
           this.authService.getCurrentUser().subscribe({
             next: () => {
-              this.router.navigate(['/dashboard']);
+              this.router.navigateByUrl(this.returnUrl);
             },
             error: () => {
               // Même si getCurrentUser échoue, on redirige quand même
-              this.router.navigate(['/dashboard']);
+              this.router.navigateByUrl(this.returnUrl);
             }
           });
         }
