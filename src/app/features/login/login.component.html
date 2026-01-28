@@ -1,72 +1,132 @@
-<div class="login-container">
-  <div class="login-card">
-    <h2>Connexion</h2>
-    
-    @if (successMessage()) {
-      <div class="success-message">
-        <span class="success-icon">✓</span>
-        {{ successMessage() }}
-      </div>
-    }
-    
-    @if (errorMessage()) {
-      <div class="error-message">
-        <span class="error-icon">⚠️</span>
-        {{ errorMessage() }}
-      </div>
-    }
+<div class="min-h-screen relative overflow-hidden">
+  <!-- Background with cargo ship image -->
+  <div class="absolute inset-0">
+    <img 
+      src="https://images.unsplash.com/photo-1494412574643-ff11b0a5c1c3?w=1920&q=80" 
+      alt="Cargo Ship" 
+      class="absolute inset-0 w-full h-full object-cover opacity-40">
+    <div class="absolute inset-0 bg-gradient-to-br from-[#0d5c63] via-[#0d5c63]/95 to-[#0d5c63]/90"></div>
+  </div>
 
-    <form (ngSubmit)="onLogin()">
-      <div class="form-group">
-        <label for="email">Email</label>
-        <input 
-          type="email" 
-          id="email" 
-          [(ngModel)]="email" 
-          name="email"
-          placeholder="exemple&#64;email.com"
-          required
-          [disabled]="isLoading()"
-          [class.input-error]="validationErrors()['email']"
-        />
-        @if (validationErrors()['email']) {
-          <span class="field-error">{{ validationErrors()['email'] }}</span>
+  <!-- Orange diagonal accent -->
+  <div class="absolute top-0 left-0 h-full w-24 overflow-hidden">
+    <div class="absolute -left-4 top-0 w-16 h-full bg-orange-500 transform -skew-x-12"></div>
+    <div class="absolute left-6 top-0 w-3 h-full bg-orange-400 transform -skew-x-12"></div>
+    <div class="absolute left-12 top-0 w-1.5 h-full bg-orange-300 transform -skew-x-12"></div>
+  </div>
+
+  <!-- Login Card -->
+  <div class="relative min-h-screen flex items-center justify-center p-4">
+    <div class="w-full max-w-md">
+      <div class="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-8">
+        <!-- Header -->
+        <div class="text-center mb-8">
+          <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-[#0d5c63] to-[#0a4a4f] rounded-full mb-4">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path>
+            </svg>
+          </div>
+          <h2 class="text-3xl font-bold text-[#0d5c63] mb-2">Welcome Back</h2>
+          <p class="text-gray-600">Sign in to manage your logistics</p>
+        </div>
+
+        <!-- Success Message -->
+        @if (successMessage()) {
+          <div class="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg flex items-center gap-3">
+            <svg class="w-5 h-5 text-green-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+            </svg>
+            <span class="text-green-700 text-sm">{{ successMessage() }}</span>
+          </div>
         }
-      </div>
 
-      <div class="form-group">
-        <label for="password">Mot de passe</label>
-        <input 
-          type="password" 
-          id="password" 
-          [(ngModel)]="password"
-          name="password"
-          placeholder="••••••••" 
-          required
-          [disabled]="isLoading()"
-          [class.input-error]="validationErrors()['password']"
-        />
-        @if (validationErrors()['password']) {
-          <span class="field-error">{{ validationErrors()['password'] }}</span>
+        <!-- Error Message -->
+        @if (errorMessage()) {
+          <div class="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-center gap-3">
+            <svg class="w-5 h-5 text-red-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+            </svg>
+            <span class="text-red-700 text-sm">{{ errorMessage() }}</span>
+          </div>
         }
+
+        <!-- Login Form -->
+        <form (ngSubmit)="onLogin()" class="space-y-5">
+          <!-- Email Field -->
+          <div>
+            <label for="email" class="block text-gray-700 text-sm font-medium mb-2">
+              Email Address
+            </label>
+            <input 
+              type="email" 
+              id="email" 
+              [(ngModel)]="email" 
+              name="email"
+              placeholder="example&#64;email.com"
+              required
+              [disabled]="isLoading()"
+              [class.border-red-500]="validationErrors()['email']"
+              class="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg text-gray-900 placeholder-gray-400 focus:border-[#0d5c63] focus:ring-2 focus:ring-[#0d5c63]/20 outline-none transition disabled:opacity-50 disabled:cursor-not-allowed"
+            />
+            @if (validationErrors()['email']) {
+              <p class="mt-1 text-sm text-red-600">{{ validationErrors()['email'] }}</p>
+            }
+          </div>
+
+          <!-- Password Field -->
+          <div>
+            <label for="password" class="block text-gray-700 text-sm font-medium mb-2">
+              Password
+            </label>
+            <input 
+              type="password" 
+              id="password" 
+              [(ngModel)]="password"
+              name="password"
+              placeholder="••••••••" 
+              required
+              [disabled]="isLoading()"
+              [class.border-red-500]="validationErrors()['password']"
+              class="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg text-gray-900 placeholder-gray-400 focus:border-[#0d5c63] focus:ring-2 focus:ring-[#0d5c63]/20 outline-none transition disabled:opacity-50 disabled:cursor-not-allowed"
+            />
+            @if (validationErrors()['password']) {
+              <p class="mt-1 text-sm text-red-600">{{ validationErrors()['password'] }}</p>
+            }
+          </div>
+
+          <!-- Submit Button -->
+          <button 
+            type="submit" 
+            [disabled]="isLoading() || !email() || !password()"
+            class="w-full py-3 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white rounded-lg font-semibold transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+          >
+            @if (isLoading()) {
+              <svg class="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              <span>Signing in...</span>
+            } @else {
+              <span>Sign In</span>
+              <div class="w-6 h-6 bg-white/20 rounded flex items-center justify-center">
+                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                </svg>
+              </div>
+            }
+          </button>
+        </form>
+
+        <!-- Register Link -->
+        <div class="mt-6 text-center">
+          <p class="text-gray-600 text-sm">
+            Don't have an account? 
+            <a routerLink="/register" class="text-[#0d5c63] hover:text-[#0a4a4f] font-semibold transition-colors">
+              Create Account
+            </a>
+          </p>
+        </div>
       </div>
-
-      <button 
-        type="submit" 
-        class="btn-submit"
-        [disabled]="isLoading() || !email() || !password()"
-      >
-        @if (isLoading()) {
-          <span class="spinner"></span>
-          Connexion en cours...
-        } @else {
-          Se connecter
-        }
-      </button>
-    </form>
-
-    <div class="register-link">
-      <p>Vous n'avez pas de compte ? <a routerLink="/register">Créer un compte</a></p>
     </div>
   </div>
 </div>

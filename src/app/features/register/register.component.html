@@ -1,152 +1,188 @@
-<div class="min-h-screen bg-gradient-to-br from-dark via-purple-900/20 to-dark flex items-center justify-center p-4">
-  <div class="w-full max-w-md">
-    <!-- Registration Card -->
-    <div class="bg-dark-light rounded-2xl shadow-2xl p-8 border border-purple-500/20">
-      <!-- Header -->
-      <div class="text-center mb-8">
-        <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full mb-4">
-          <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
-          </svg>
-        </div>
-        <h2 class="text-3xl font-bold text-white mb-2">Create Account</h2>
-        <p class="text-gray-400">Join us to manage your logistics</p>
-      </div>
+<div class="min-h-screen relative overflow-hidden">
+  <!-- Background with cargo ship image -->
+  <div class="absolute inset-0">
+    <img 
+      src="https://images.unsplash.com/photo-1494412574643-ff11b0a5c1c3?w=1920&q=80" 
+      alt="Cargo Ship" 
+      class="absolute inset-0 w-full h-full object-cover opacity-40">
+    <div class="absolute inset-0 bg-gradient-to-br from-[#0d5c63] via-[#0d5c63]/95 to-[#0d5c63]/90"></div>
+  </div>
 
-      <!-- Error Message -->
-      @if (errorMessage()) {
-        <div class="mb-6 p-4 bg-red-500/10 border border-red-500/50 rounded-lg">
-          <p class="text-red-400 text-sm">{{ errorMessage() }}</p>
+  <!-- Orange diagonal accent -->
+  <div class="absolute top-0 left-0 h-full w-24 overflow-hidden">
+    <div class="absolute -left-4 top-0 w-16 h-full bg-orange-500 transform -skew-x-12"></div>
+    <div class="absolute left-6 top-0 w-3 h-full bg-orange-400 transform -skew-x-12"></div>
+    <div class="absolute left-12 top-0 w-1.5 h-full bg-orange-300 transform -skew-x-12"></div>
+  </div>
+
+  <!-- Registration Card -->
+  <div class="relative min-h-screen flex items-center justify-center p-4 py-8">
+    <div class="w-full max-w-4xl">
+      <div class="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-8">
+        <!-- Header -->
+        <div class="text-center mb-8">
+          <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-[#0d5c63] to-[#0a4a4f] rounded-full mb-4">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
+            </svg>
+          </div>
+          <h2 class="text-3xl font-bold text-[#0d5c63] mb-2">Create Account</h2>
+          <p class="text-gray-600">Join us to manage your logistics</p>
         </div>
-      }
+
+        <!-- Error Message -->
+        @if (errorMessage()) {
+          <div class="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-center gap-3">
+            <svg class="w-5 h-5 text-red-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+            </svg>
+            <p class="text-red-700 text-sm">{{ errorMessage() }}</p>
+          </div>
+        }
 
       <!-- Registration Form -->
-      <form (ngSubmit)="onSubmit()" class="space-y-4">
-        <!-- Name Field -->
-        <div>
-          <label class="block text-gray-300 text-sm font-medium mb-2">
-            Full Name
-          </label>
-          <input
-            type="text"
-            [value]="registerForm().name"
-            (input)="updateFormField('name', $any($event.target).value)"
-            [class.border-red-500]="validationErrors()['name']"
-            class="w-full px-4 py-3 bg-dark border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 outline-none transition"
-            placeholder="Enter your full name"
-            required
-          />
-          @if (validationErrors()['name']) {
-            <p class="mt-1 text-sm text-red-400">{{ validationErrors()['name'] }}</p>
-          }
-        </div>
+      <form (ngSubmit)="onSubmit()">
+        <!-- Two Column Layout -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Left Column -->
+          <div class="space-y-4">
+            <!-- Name Field -->
+            <div>
+              <label class="block text-gray-700 text-sm font-medium mb-2">
+                Full Name
+              </label>
+              <input
+                type="text"
+                [value]="registerForm().name"
+                (input)="updateFormField('name', $any($event.target).value)"
+                [class.border-red-500]="validationErrors()['name']"
+                class="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-gray-900 placeholder-gray-400 focus:border-[#0d5c63] focus:ring-2 focus:ring-[#0d5c63]/20 outline-none transition"
+                placeholder="Enter your full name"
+                required
+              />
+              @if (validationErrors()['name']) {
+                <p class="mt-1 text-sm text-red-600">{{ validationErrors()['name'] }}</p>
+              }
+            </div>
 
-        <!-- Email Field -->
-        <div>
-          <label class="block text-gray-300 text-sm font-medium mb-2">
-            Email Address
-          </label>
-          <input
-            type="email"
-            [value]="registerForm().email"
-            (input)="updateFormField('email', $any($event.target).value)"
-            [class.border-red-500]="validationErrors()['email']"
-            class="w-full px-4 py-3 bg-dark border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 outline-none transition"
-            placeholder="your&#64;email.com"
-            required
-          />
-          @if (validationErrors()['email']) {
-            <p class="mt-1 text-sm text-red-400">{{ validationErrors()['email'] }}</p>
-          }
-        </div>
+            <!-- Email Field -->
+            <div>
+              <label class="block text-gray-700 text-sm font-medium mb-2">
+                Email Address
+              </label>
+              <input
+                type="email"
+                [value]="registerForm().email"
+                (input)="updateFormField('email', $any($event.target).value)"
+                [class.border-red-500]="validationErrors()['email']"
+                class="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-gray-900 placeholder-gray-400 focus:border-[#0d5c63] focus:ring-2 focus:ring-[#0d5c63]/20 outline-none transition"
+                placeholder="your&#64;email.com"
+                required
+              />
+              @if (validationErrors()['email']) {
+                <p class="mt-1 text-sm text-red-600">{{ validationErrors()['email'] }}</p>
+              }
+            </div>
 
-        <!-- Password Field -->
-        <div>
-          <label class="block text-gray-300 text-sm font-medium mb-2">
-            Password
-          </label>
-          <input
-            type="password"
-            [value]="registerForm().password"
-            (input)="updateFormField('password', $any($event.target).value)"
-            [class.border-red-500]="validationErrors()['password']"
-            class="w-full px-4 py-3 bg-dark border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 outline-none transition"
-            placeholder="Enter your password (min 6 characters)"
-            required
-          />
-          @if (validationErrors()['password']) {
-            <p class="mt-1 text-sm text-red-400">{{ validationErrors()['password'] }}</p>
-          }
-        </div>
+            <!-- Password Field -->
+            <div>
+              <label class="block text-gray-700 text-sm font-medium mb-2">
+                Password
+              </label>
+              <input
+                type="password"
+                [value]="registerForm().password"
+                (input)="updateFormField('password', $any($event.target).value)"
+                [class.border-red-500]="validationErrors()['password']"
+                class="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-gray-900 placeholder-gray-400 focus:border-[#0d5c63] focus:ring-2 focus:ring-[#0d5c63]/20 outline-none transition"
+                placeholder="Min 6 characters"
+                required
+              />
+              @if (validationErrors()['password']) {
+                <p class="mt-1 text-sm text-red-600">{{ validationErrors()['password'] }}</p>
+              }
+            </div>
+          </div>
 
-        <!-- Phone Number Field -->
-        <div>
-          <label class="block text-gray-300 text-sm font-medium mb-2">
-            Phone Number
-          </label>
-          <input
-            type="tel"
-            [value]="registerForm().phoneNumber"
-            (input)="updateFormField('phoneNumber', $any($event.target).value)"
-            [class.border-red-500]="validationErrors()['phoneNumber']"
-            class="w-full px-4 py-3 bg-dark border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 outline-none transition"
-            placeholder="+212612345678"
-            required
-          />
-          @if (validationErrors()['phoneNumber']) {
-            <p class="mt-1 text-sm text-red-400">{{ validationErrors()['phoneNumber'] }}</p>
-          }
-        </div>
+          <!-- Right Column -->
+          <div class="space-y-4">
+            <!-- Phone Number Field -->
+            <div>
+              <label class="block text-gray-700 text-sm font-medium mb-2">
+                Phone Number
+              </label>
+              <input
+                type="tel"
+                [value]="registerForm().phoneNumber"
+                (input)="updateFormField('phoneNumber', $any($event.target).value)"
+                [class.border-red-500]="validationErrors()['phoneNumber']"
+                class="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-gray-900 placeholder-gray-400 focus:border-[#0d5c63] focus:ring-2 focus:ring-[#0d5c63]/20 outline-none transition"
+                placeholder="+212612345678"
+                required
+              />
+              @if (validationErrors()['phoneNumber']) {
+                <p class="mt-1 text-sm text-red-600">{{ validationErrors()['phoneNumber'] }}</p>
+              }
+            </div>
 
-        <!-- Address Field -->
-        <div>
-          <label class="block text-gray-300 text-sm font-medium mb-2">
-            Address
-          </label>
-          <textarea
-            [value]="registerForm().address"
-            (input)="updateFormField('address', $any($event.target).value)"
-            [class.border-red-500]="validationErrors()['address']"
-            class="w-full px-4 py-3 bg-dark border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 outline-none transition resize-none"
-            placeholder="Enter your address"
-            rows="2"
-            required
-          ></textarea>
-          @if (validationErrors()['address']) {
-            <p class="mt-1 text-sm text-red-400">{{ validationErrors()['address'] }}</p>
-          }
+            <!-- Address Field -->
+            <div>
+              <label class="block text-gray-700 text-sm font-medium mb-2">
+                Address
+              </label>
+              <textarea
+                [value]="registerForm().address"
+                (input)="updateFormField('address', $any($event.target).value)"
+                [class.border-red-500]="validationErrors()['address']"
+                class="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-gray-900 placeholder-gray-400 focus:border-[#0d5c63] focus:ring-2 focus:ring-[#0d5c63]/20 outline-none transition resize-none"
+                placeholder="Enter your address"
+                rows="5"
+                required
+              ></textarea>
+              @if (validationErrors()['address']) {
+                <p class="mt-1 text-sm text-red-600">{{ validationErrors()['address'] }}</p>
+              }
+            </div>
+          </div>
         </div>
 
         <!-- Submit Button -->
         <button
           type="submit"
           [disabled]="isLoading()"
-          class="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3 rounded-lg font-semibold hover:from-purple-600 hover:to-pink-600 transition duration-200 shadow-lg hover:shadow-purple-500/50 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+          class="w-full mt-6 py-3 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white rounded-lg font-semibold transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
         >
           @if (isLoading()) {
-            <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <svg class="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
               <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
               <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
             </svg>
+            <span>Creating Account...</span>
           } @else {
             <span>Create Account</span>
+            <div class="w-6 h-6 bg-white/20 rounded flex items-center justify-center">
+              <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd"/>
+              </svg>
+            </div>
           }
         </button>
       </form>
 
       <!-- Login Link -->
       <div class="mt-6 text-center">
-        <p class="text-gray-400">
+        <p class="text-gray-600 text-sm">
           Already have an account?
           <button
             type="button"
             (click)="goToLogin()"
-            class="text-purple-400 hover:text-purple-300 font-medium ml-1"
+            class="text-[#0d5c63] hover:text-[#0a4a4f] font-semibold ml-1 transition-colors"
           >
-            Sign in
+            Sign In
           </button>
         </p>
       </div>
     </div>
   </div>
+</div>
 </div>
