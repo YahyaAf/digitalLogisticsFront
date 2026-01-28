@@ -39,16 +39,23 @@
 
         <!-- Desktop Navigation -->
         <div class="hidden md:flex items-center space-x-1">
-          <a (click)="navigateTo('/')" class="px-4 py-2 text-orange-400 font-medium text-sm cursor-pointer">Home</a>
-          <a (click)="navigateTo('/services')" class="px-4 py-2 text-white hover:text-orange-400 font-medium text-sm cursor-pointer transition-colors">Services</a>
-          <a (click)="navigateTo('/sales-orders')" class="px-4 py-2 text-white hover:text-orange-400 font-medium text-sm cursor-pointer transition-colors">Mes Commandes</a>
-          <a (click)="navigateTo('/project')" class="px-4 py-2 text-white hover:text-orange-400 font-medium text-sm cursor-pointer transition-colors">Project</a>
-          <a (click)="navigateTo('/team')" class="px-4 py-2 text-white hover:text-orange-400 font-medium text-sm cursor-pointer transition-colors">Team</a>
-          <a (click)="navigateTo('/blog')" class="px-4 py-2 text-white hover:text-orange-400 font-medium text-sm cursor-pointer transition-colors">Blog</a>
-          <a (click)="navigateTo('/contact')" class="px-4 py-2 text-white hover:text-orange-400 font-medium text-sm cursor-pointer transition-colors">Contact</a>
+          <a (click)="navigateTo('/')" [class]="isActive('/') ? 'px-4 py-2 text-orange-400 font-medium text-sm cursor-pointer' : 'px-4 py-2 text-white hover:text-orange-400 font-medium text-sm cursor-pointer transition-colors'">Home</a>
+          <a (click)="navigateTo('/sales-orders')" [class]="isActive('/sales-orders') ? 'px-4 py-2 text-orange-400 font-medium text-sm cursor-pointer' : 'px-4 py-2 text-white hover:text-orange-400 font-medium text-sm cursor-pointer transition-colors'">Mes Commandes</a>
+          
+          @if (!isAuthenticated) {
+            <a (click)="navigateTo('/login')" class="px-4 py-2 text-white hover:text-orange-400 font-medium text-sm cursor-pointer transition-colors">Login</a>
+            <a (click)="navigateTo('/register')" class="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg font-semibold text-sm cursor-pointer transition-all shadow-lg">Register</a>
+          } @else {
+            <button (click)="logout()" class="ml-2 px-5 py-2 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white rounded-lg font-semibold text-sm transition-all shadow-lg hover:shadow-xl flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+              </svg>
+              Logout
+            </button>
+          }
         </div>
 
-        <!-- Phone & CTA -->
+        <!-- Phone -->
         <div class="hidden md:flex items-center space-x-4">
           <div class="flex items-center">
             <div class="w-9 h-9 bg-orange-500 rounded-full flex items-center justify-center mr-2">
@@ -61,9 +68,6 @@
               <div class="text-xs font-bold text-orange-400">+011 775 643 21</div>
             </div>
           </div>
-          <button (click)="navigateTo('/contact')" class="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded text-xs font-semibold transition-colors">
-            REQUEST A QUOTE
-          </button>
         </div>
 
         <!-- Mobile Menu Button -->
@@ -80,15 +84,19 @@
       <div *ngIf="mobileMenuOpen" class="md:hidden pb-4 border-t border-[#0a4a50]">
         <div class="flex flex-col space-y-2 pt-4">
           <a (click)="navigateTo('/')" class="text-orange-400 font-medium py-2 cursor-pointer">Home</a>
-          <a (click)="navigateTo('/services')" class="text-white hover:text-orange-400 font-medium py-2 cursor-pointer">Services</a>
           <a (click)="navigateTo('/sales-orders')" class="text-white hover:text-orange-400 font-medium py-2 cursor-pointer">Mes Commandes</a>
-          <a (click)="navigateTo('/project')" class="text-white hover:text-orange-400 font-medium py-2 cursor-pointer">Project</a>
-          <a (click)="navigateTo('/team')" class="text-white hover:text-orange-400 font-medium py-2 cursor-pointer">Team</a>
-          <a (click)="navigateTo('/blog')" class="text-white hover:text-orange-400 font-medium py-2 cursor-pointer">Blog</a>
-          <a (click)="navigateTo('/contact')" class="text-white hover:text-orange-400 font-medium py-2 cursor-pointer">Contact</a>
-          <button (click)="navigateTo('/contact')" class="mt-2 px-4 py-2 bg-orange-500 text-white rounded text-sm font-semibold">
-            REQUEST A QUOTE
-          </button>
+          
+          @if (!isAuthenticated) {
+            <a (click)="navigateTo('/login')" class="text-white hover:text-orange-400 font-medium py-2 cursor-pointer">Login</a>
+            <a (click)="navigateTo('/register')" class="mt-2 px-4 py-2.5 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white rounded-lg text-sm font-semibold cursor-pointer text-center shadow-lg">Register</a>
+          } @else {
+            <button (click)="logout()" class="mt-2 px-4 py-2.5 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white rounded-lg text-sm font-semibold shadow-lg flex items-center justify-center gap-2 w-full">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+              </svg>
+              Logout
+            </button>
+          }
         </div>
       </div>
     </div>
