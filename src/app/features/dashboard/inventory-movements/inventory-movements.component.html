@@ -9,14 +9,14 @@
   <div class="flex gap-4 mb-6">
     <button
       (click)="switchFilter('all')"
-      [ngClass]="filterType() === 'all' ? 'bg-indigo-500 text-white' : 'bg-dark-light text-gray-400 hover:text-white'"
+      [ngClass]="filterType() === 'all' ? 'bg-purple-500 text-white' : 'bg-dark-light text-gray-400 hover:text-white'"
       class="px-4 py-2 rounded-lg transition-colors"
     >
       All Movements
     </button>
     <button
       (click)="switchFilter('warehouse')"
-      [ngClass]="filterType() === 'warehouse' ? 'bg-indigo-500 text-white' : 'bg-dark-light text-gray-400 hover:text-white'"
+      [ngClass]="filterType() === 'warehouse' ? 'bg-purple-500 text-white' : 'bg-dark-light text-gray-400 hover:text-white'"
       class="px-4 py-2 rounded-lg transition-colors"
     >
       By Warehouse
@@ -25,12 +25,12 @@
 
   <!-- Warehouse Filter -->
   @if (filterType() === 'warehouse') {
-    <div class="mb-6 bg-dark-light rounded-xl p-4 border border-indigo-500/20">
+    <div class="mb-6 bg-dark-light rounded-xl p-4 border border-purple-500/20">
       <label class="block text-sm font-medium text-gray-300 mb-2">Select Warehouse</label>
       <select
         [value]="selectedWarehouseId() || 0"
         (change)="onWarehouseChange(+$any($event.target).value)"
-        class="w-full md:w-96 px-4 py-3 bg-dark border border-gray-700 rounded-lg text-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none transition"
+        class="w-full md:w-96 px-4 py-3 bg-dark border border-gray-700 rounded-lg text-white focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 outline-none transition"
       >
         <option [value]="0">Select a warehouse...</option>
         @for (warehouse of warehouses(); track warehouse.id) {
@@ -41,10 +41,10 @@
   }
 
   <!-- Movements Table -->
-  <div class="bg-dark-light rounded-xl shadow-lg overflow-hidden border border-indigo-500/20">
+  <div class="bg-dark-light rounded-xl shadow-lg overflow-hidden border border-purple-500/20">
     @if (loading() && movements().length === 0) {
       <div class="flex justify-center items-center py-20">
-        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-500"></div>
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500"></div>
       </div>
     } @else if (movements().length === 0) {
       <div class="text-center py-20">

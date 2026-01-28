@@ -20,17 +20,16 @@ export class SidebarComponent {
 
   menuItems: MenuItem[] = [
     { icon: 'home', label: 'Dashboard', route: '/dashboard/home' },
-    { icon: 'chart', label: 'Analytics', route: '/dashboard/analytics' },
     { icon: 'users', label: 'Clients', route: '/dashboard/clients' },
     { icon: 'package', label: 'Products', route: '/dashboard/products', badge: 12 },
     { icon: 'supplier', label: 'Suppliers', route: '/dashboard/suppliers' },
     { icon: 'truck', label: 'Carriers', route: '/dashboard/carriers' },
-    { icon: 'truck', label: 'Shipments', route: '/dashboard/shipments' },
+    { icon: 'shipment', label: 'Shipments', route: '/dashboard/shipments' },
     { icon: 'warehouse', label: 'Warehouses', route: '/dashboard/warehouses' },
-    { icon: 'clipboard', label: 'Inventories', route: '/dashboard/inventories' },
-    { icon: 'chart', label: 'Movements', route: '/dashboard/inventory-movements' },
-    { icon: 'shopping-cart', label: 'Purchase Orders', route: '/dashboard/purchase-orders' },
-    { icon: 'clipboard', label: 'Sales Orders', route: '/dashboard/sales-orders' },
+    { icon: 'inventory', label: 'Inventories', route: '/dashboard/inventories' },
+    { icon: 'movement', label: 'Movements', route: '/dashboard/inventory-movements' },
+    { icon: 'purchase', label: 'Purchase Orders', route: '/dashboard/purchase-orders' },
+    { icon: 'sales', label: 'Sales Orders', route: '/dashboard/sales-orders' },
     { icon: 'users-cog', label: 'Users', route: '/dashboard/users' },
   ];
 

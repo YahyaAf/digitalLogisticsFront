@@ -1,17 +1,17 @@
-<div class="container mx-auto px-4 py-8">
+<div class="bg-dark-light p-6">
   <!-- Header -->
   <div class="mb-8">
-    <h1 class="text-3xl font-bold text-gray-900 mb-2">Gestion des Expéditions</h1>
-    <p class="text-gray-600">Suivez et gérez toutes les expéditions</p>
+    <h1 class="text-2xl font-bold text-white">Gestion des Expéditions</h1>
+    <p class="text-gray-400">Suivez et gérez toutes les expéditions</p>
   </div>
 
   <!-- Stats Cards -->
   <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-    <div class="bg-white rounded-lg shadow-md p-6">
+    <div class="bg-dark-light border border-purple-500/10 rounded-xl p-6">
       <div class="flex items-center justify-between">
         <div>
-          <p class="text-sm text-gray-600 mb-1">Total</p>
-          <p class="text-3xl font-bold text-gray-900">{{ stats().total }}</p>
+          <p class="text-sm text-gray-400 mb-1">Total</p>
+          <p class="text-3xl font-bold text-white">{{ stats().total }}</p>
         </div>
         <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
           <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -21,11 +21,11 @@
       </div>
     </div>
 
-    <div class="bg-white rounded-lg shadow-md p-6">
+    <div class="bg-dark-light border border-purple-500/10 rounded-xl p-6">
       <div class="flex items-center justify-between">
         <div>
-          <p class="text-sm text-gray-600 mb-1">Planifiées</p>
-          <p class="text-3xl font-bold text-blue-600">{{ stats().planned }}</p>
+          <p class="text-sm text-gray-400 mb-1">Planifiées</p>
+          <p class="text-3xl font-bold text-blue-400">{{ stats().planned }}</p>
         </div>
         <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
           <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -35,11 +35,11 @@
       </div>
     </div>
 
-    <div class="bg-white rounded-lg shadow-md p-6">
+    <div class="bg-dark-light border border-purple-500/10 rounded-xl p-6">
       <div class="flex items-center justify-between">
         <div>
-          <p class="text-sm text-gray-600 mb-1">En transit</p>
-          <p class="text-3xl font-bold text-yellow-600">{{ stats().inTransit }}</p>
+          <p class="text-sm text-gray-400 mb-1">En transit</p>
+          <p class="text-3xl font-bold text-yellow-400">{{ stats().inTransit }}</p>
         </div>
         <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
           <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -49,11 +49,11 @@
       </div>
     </div>
 
-    <div class="bg-white rounded-lg shadow-md p-6">
+    <div class="bg-dark-light border border-purple-500/10 rounded-xl p-6">
       <div class="flex items-center justify-between">
         <div>
-          <p class="text-sm text-gray-600 mb-1">Livrées</p>
-          <p class="text-3xl font-bold text-green-600">{{ stats().delivered }}</p>
+          <p class="text-sm text-gray-400 mb-1">Livrées</p>
+          <p class="text-3xl font-bold text-green-400">{{ stats().delivered }}</p>
         </div>
         <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
           <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -66,9 +66,12 @@
 
   <!-- Success Message -->
   @if (successMessage()) {
-    <div class="mb-6 bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg flex items-center justify-between">
-      <span>{{ successMessage() }}</span>
-      <button (click)="successMessage.set(null)" class="text-green-800 hover:text-green-900">
+    <div class="fixed top-4 right-4 z-50 bg-green-500 text-white px-6 py-4 rounded-lg shadow-2xl flex items-center space-x-3 animate-slide-in">
+      <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+      </svg>
+      <span class="text-white font-medium">{{ successMessage() }}</span>
+      <button (click)="successMessage.set(null)" class="text-white hover:text-gray-200">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
         </svg>
@@ -78,9 +81,12 @@
 
   <!-- Error Message -->
   @if (error()) {
-    <div class="mb-6 bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg flex items-center justify-between">
-      <span>{{ error() }}</span>
-      <button (click)="error.set(null)" class="text-red-800 hover:text-red-900">
+    <div class="fixed top-4 right-4 z-50 bg-red-500 text-white px-6 py-4 rounded-lg shadow-2xl flex items-center space-x-3 animate-slide-in">
+      <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+      </svg>
+      <span class="text-white font-medium">{{ error() }}</span>
+      <button (click)="error.set(null)" class="text-white hover:text-gray-200">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
         </svg>
@@ -89,27 +95,27 @@
   }
 
   <!-- Filters -->
-  <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+  <div class="bg-dark-light rounded-xl shadow-lg p-6 mb-6 border border-purple-500/20">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <!-- Search -->
       <div>
-        <label class="block text-sm font-medium text-gray-700 mb-2">Rechercher</label>
+        <label class="block text-sm font-medium text-gray-300 mb-2">Rechercher</label>
         <input
           type="text"
           [value]="searchQuery()"
           (input)="onSearchChange($any($event.target).value)"
           placeholder="ID, Tracking, Client, Transporteur..."
-          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          class="w-full px-4 py-2 bg-dark border border-gray-600 text-white rounded-lg focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20"
         />
       </div>
 
       <!-- Status Filter -->
       <div>
-        <label class="block text-sm font-medium text-gray-700 mb-2">Statut</label>
+        <label class="block text-sm font-medium text-gray-300 mb-2">Statut</label>
         <select
           [value]="statusFilter()"
           (change)="onStatusFilterChange($any($event.target).value)"
-          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          class="w-full px-4 py-2 bg-dark border border-gray-600 text-white rounded-lg focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20"
         >
           <option value="ALL">Tous les statuts</option>
           <option [value]="ShipmentStatus.PLANNED">Planifiée</option>
@@ -121,50 +127,50 @@
   </div>
 
   <!-- Shipments Table -->
-  <div class="bg-white rounded-lg shadow-md overflow-hidden">
+  <div class="bg-dark-light rounded-xl shadow-lg overflow-hidden border border-purple-500/20">
     @if (loading()) {
       <div class="flex items-center justify-center py-12">
-        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500"></div>
       </div>
     } @else if (filteredShipments().length === 0) {
       <div class="text-center py-12">
-        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg class="mx-auto h-12 w-12 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
         </svg>
-        <h3 class="mt-2 text-sm font-medium text-gray-900">Aucune expédition</h3>
+        <h3 class="mt-2 text-sm font-medium text-gray-400">Aucune expédition</h3>
         <p class="mt-1 text-sm text-gray-500">Aucune expédition ne correspond aux critères de recherche.</p>
       </div>
     } @else {
       <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-200">
-          <thead class="bg-gray-50">
+        <table class="min-w-full divide-y divide-gray-700">
+          <thead class="bg-dark border-b border-gray-700">
             <tr>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tracking</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Client</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Transporteur</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date prévue</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">ID</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Tracking</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Client</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Transporteur</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Date prévue</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Statut</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Actions</th>
             </tr>
           </thead>
-          <tbody class="bg-white divide-y divide-gray-200">
+          <tbody class="divide-y divide-gray-700">
             @for (shipment of filteredShipments(); track shipment.id) {
-              <tr class="hover:bg-gray-50 transition-colors">
-                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+              <tr class="hover:bg-dark transition-colors">
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-white">
                   #{{ shipment.id }}
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
-                  <span class="text-sm font-mono text-blue-600">{{ shipment.trackingNumber }}</span>
+                  <span class="text-sm font-mono text-purple-400">{{ shipment.trackingNumber }}</span>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
-                  <div class="text-sm font-medium text-gray-900">{{ shipment.clientName }}</div>
-                  <div class="text-sm text-gray-500">{{ shipment.clientEmail }}</div>
+                  <div class="text-sm font-medium text-white">{{ shipment.clientName }}</div>
+                  <div class="text-sm text-gray-400">{{ shipment.clientEmail }}</div>
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
                   {{ shipment.carrierName || '-' }}
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
                   {{ formatDate(shipment.plannedDate) }}
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
@@ -175,7 +181,7 @@
                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
                   <button
                     (click)="viewShipmentDetails(shipment)"
-                    class="text-blue-600 hover:text-blue-900"
+                    class="text-cyan-400 hover:text-cyan-300 transition-colors"
                     title="Voir détails"
                   >
                     <svg class="w-5 h-5 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -243,14 +249,14 @@
 
 <!-- Shipment Details Modal -->
 @if (showDetailsModal() && selectedShipment()) {
-  <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-    <div class="bg-white rounded-lg max-w-3xl w-full max-h-[90vh] overflow-y-auto">
+  <div class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div class="bg-dark-light border border-purple-500/20 rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
       <!-- Modal Header -->
-      <div class="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
-        <h3 class="text-xl font-semibold text-gray-900">Détails de l'expédition #{{ selectedShipment()!.id }}</h3>
+      <div class="sticky top-0 bg-dark-light border-b border-gray-700 px-6 py-4 flex items-center justify-between">
+        <h3 class="text-xl font-semibold text-white">Détails de l'expédition #{{ selectedShipment()!.id }}</h3>
         <button
           (click)="closeDetailsModal()"
-          class="text-gray-400 hover:text-gray-600"
+          class="text-gray-400 hover:text-white transition-colors"
         >
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
@@ -263,13 +269,13 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <!-- Tracking Info -->
           <div>
-            <h4 class="text-sm font-medium text-gray-500 mb-2">Numéro de suivi</h4>
-            <p class="text-lg font-mono font-semibold text-blue-600">{{ selectedShipment()!.trackingNumber }}</p>
+            <h4 class="text-sm font-medium text-gray-400 mb-2">Numéro de suivi</h4>
+            <p class="text-lg font-mono font-semibold text-purple-400">{{ selectedShipment()!.trackingNumber }}</p>
           </div>
 
           <!-- Status -->
           <div>
-            <h4 class="text-sm font-medium text-gray-500 mb-2">Statut</h4>
+            <h4 class="text-sm font-medium text-gray-400 mb-2">Statut</h4>
             <span [class]="'px-3 py-1 inline-flex text-sm font-semibold rounded-full ' + getStatusColor(selectedShipment()!.status)">
               {{ getStatusLabel(selectedShipment()!.status) }}
             </span>
@@ -277,60 +283,60 @@
 
           <!-- Client Info -->
           <div class="md:col-span-2">
-            <h4 class="text-sm font-medium text-gray-500 mb-2">Informations Client</h4>
-            <p class="text-lg font-semibold text-gray-900">{{ selectedShipment()!.clientName }}</p>
-            <p class="text-sm text-gray-600">{{ selectedShipment()!.clientEmail }}</p>
-            <p class="text-sm text-gray-600">{{ selectedShipment()!.clientPhoneNumber }}</p>
-            <p class="text-sm text-gray-600 mt-1">{{ selectedShipment()!.clientAddress }}</p>
+            <h4 class="text-sm font-medium text-gray-400 mb-2">Informations Client</h4>
+            <p class="text-lg font-semibold text-white">{{ selectedShipment()!.clientName }}</p>
+            <p class="text-sm text-gray-400">{{ selectedShipment()!.clientEmail }}</p>
+            <p class="text-sm text-gray-400">{{ selectedShipment()!.clientPhoneNumber }}</p>
+            <p class="text-sm text-gray-400 mt-1">{{ selectedShipment()!.clientAddress }}</p>
           </div>
 
           <!-- Carrier Info -->
           <div>
-            <h4 class="text-sm font-medium text-gray-500 mb-2">Transporteur</h4>
-            <p class="text-gray-900">{{ selectedShipment()!.carrierName || 'Non assigné' }}</p>
+            <h4 class="text-sm font-medium text-gray-400 mb-2">Transporteur</h4>
+            <p class="text-white">{{ selectedShipment()!.carrierName || 'Non assigné' }}</p>
             @if (selectedShipment()!.carrierCode) {
-              <p class="text-sm text-gray-500">Code: {{ selectedShipment()!.carrierCode }}</p>
+              <p class="text-sm text-gray-400">Code: {{ selectedShipment()!.carrierCode }}</p>
             }
           </div>
 
           <!-- Sales Order -->
           <div>
-            <h4 class="text-sm font-medium text-gray-500 mb-2">Commande liée</h4>
-            <p class="text-gray-900">Commande #{{ selectedShipment()!.salesOrderId }}</p>
+            <h4 class="text-sm font-medium text-gray-400 mb-2">Commande liée</h4>
+            <p class="text-white">Commande #{{ selectedShipment()!.salesOrderId }}</p>
           </div>
 
           <!-- Dates -->
           <div>
-            <h4 class="text-sm font-medium text-gray-500 mb-2">Date de création</h4>
-            <p class="text-gray-900">{{ formatDate(selectedShipment()!.createdAt) }}</p>
+            <h4 class="text-sm font-medium text-gray-400 mb-2">Date de création</h4>
+            <p class="text-white">{{ formatDate(selectedShipment()!.createdAt) }}</p>
           </div>
 
           <div>
-            <h4 class="text-sm font-medium text-gray-500 mb-2">Date prévue</h4>
-            <p class="text-gray-900">{{ formatDate(selectedShipment()!.plannedDate) }}</p>
+            <h4 class="text-sm font-medium text-gray-400 mb-2">Date prévue</h4>
+            <p class="text-white">{{ formatDate(selectedShipment()!.plannedDate) }}</p>
           </div>
 
           @if (selectedShipment()!.shippedDate) {
             <div>
-              <h4 class="text-sm font-medium text-gray-500 mb-2">Date d'expédition</h4>
-              <p class="text-gray-900">{{ formatDate(selectedShipment()!.shippedDate) }}</p>
+              <h4 class="text-sm font-medium text-gray-400 mb-2">Date d'expédition</h4>
+              <p class="text-white">{{ formatDate(selectedShipment()!.shippedDate) }}</p>
             </div>
           }
 
           @if (selectedShipment()!.deliveredDate) {
             <div>
-              <h4 class="text-sm font-medium text-gray-500 mb-2">Date de livraison</h4>
-              <p class="text-gray-900">{{ formatDate(selectedShipment()!.deliveredDate) }}</p>
+              <h4 class="text-sm font-medium text-gray-400 mb-2">Date de livraison</h4>
+              <p class="text-white">{{ formatDate(selectedShipment()!.deliveredDate) }}</p>
             </div>
           }
         </div>
 
         <!-- Actions -->
-        <div class="mt-6 flex flex-wrap gap-3 border-t pt-4">
+        <div class="mt-6 flex flex-wrap gap-3 border-t border-gray-700 pt-4">
           @if (canMarkInTransit(selectedShipment()!)) {
             <button
               (click)="markAsInTransit(selectedShipment()!.id)"
-              class="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors"
+              class="px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-colors"
             >
               Marquer en transit
             </button>
@@ -339,7 +345,7 @@
           @if (canMarkDelivered(selectedShipment()!)) {
             <button
               (click)="markAsDelivered(selectedShipment()!.id)"
-              class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+              class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
             >
               Marquer comme livrée
             </button>
@@ -348,7 +354,7 @@
           @if (canUpdateDate(selectedShipment()!)) {
             <button
               (click)="openUpdateDateModal(selectedShipment()!)"
-              class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+              class="px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-lg transition-all shadow-lg hover:shadow-purple-500/50"
             >
               Modifier la date
             </button>
@@ -357,7 +363,7 @@
           @if (canDelete(selectedShipment()!)) {
             <button
               (click)="deleteShipment(selectedShipment()!.id)"
-              class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+              class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
             >
               Supprimer
             </button>
@@ -370,35 +376,35 @@
 
 <!-- Update Date Modal -->
 @if (showUpdateDateModal() && selectedShipment()) {
-  <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-    <div class="bg-white rounded-lg max-w-md w-full">
+  <div class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div class="bg-dark-light border border-purple-500/20 rounded-2xl shadow-2xl max-w-md w-full">
       <!-- Modal Header -->
-      <div class="border-b border-gray-200 px-6 py-4">
-        <h3 class="text-xl font-semibold text-gray-900">Modifier la date prévue</h3>
+      <div class="border-b border-gray-700 px-6 py-4">
+        <h3 class="text-xl font-semibold text-white">Modifier la date prévue</h3>
       </div>
 
       <!-- Modal Body -->
       <div class="px-6 py-4">
-        <label class="block text-sm font-medium text-gray-700 mb-2">Nouvelle date prévue</label>
+        <label class="block text-sm font-medium text-gray-300 mb-2">Nouvelle date prévue</label>
         <input
           type="datetime-local"
           [value]="newPlannedDate()"
           (input)="newPlannedDate.set($any($event.target).value)"
-          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+          class="w-full px-4 py-2 bg-dark border border-gray-600 text-white rounded-lg focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20"
         />
       </div>
 
       <!-- Modal Footer -->
-      <div class="border-t border-gray-200 px-6 py-4 flex justify-end space-x-3">
+      <div class="border-t border-gray-700 px-6 py-4 flex justify-end space-x-3">
         <button
           (click)="closeUpdateDateModal()"
-          class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+          class="px-4 py-2 border border-gray-600 rounded-lg text-gray-300 hover:bg-dark transition-colors"
         >
           Annuler
         </button>
         <button
           (click)="updatePlannedDate()"
-          class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+          class="px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-lg transition-all shadow-lg hover:shadow-purple-500/50"
         >
           Confirmer
         </button>
