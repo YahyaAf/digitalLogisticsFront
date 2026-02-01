@@ -40,7 +40,9 @@
         <!-- Desktop Navigation -->
         <div class="hidden md:flex items-center space-x-1">
           <a (click)="navigateTo('/')" [class]="isActive('/') ? 'px-4 py-2 text-orange-400 font-medium text-sm cursor-pointer' : 'px-4 py-2 text-white hover:text-orange-400 font-medium text-sm cursor-pointer transition-colors'">Home</a>
-          <a (click)="navigateTo('/sales-orders')" [class]="isActive('/sales-orders') ? 'px-4 py-2 text-orange-400 font-medium text-sm cursor-pointer' : 'px-4 py-2 text-white hover:text-orange-400 font-medium text-sm cursor-pointer transition-colors'">Mes Commandes</a>
+          @if (isClient()) {
+            <a (click)="navigateTo('/sales-orders')" [class]="isActive('/sales-orders') ? 'px-4 py-2 text-orange-400 font-medium text-sm cursor-pointer' : 'px-4 py-2 text-white hover:text-orange-400 font-medium text-sm cursor-pointer transition-colors'">Mes Commandes</a>
+          }
           
           @if (!isAuthenticated) {
             <a (click)="navigateTo('/login')" class="px-4 py-2 text-white hover:text-orange-400 font-medium text-sm cursor-pointer transition-colors">Login</a>
@@ -84,7 +86,9 @@
       <div *ngIf="mobileMenuOpen" class="md:hidden pb-4 border-t border-[#0a4a50]">
         <div class="flex flex-col space-y-2 pt-4">
           <a (click)="navigateTo('/')" class="text-orange-400 font-medium py-2 cursor-pointer">Home</a>
-          <a (click)="navigateTo('/sales-orders')" class="text-white hover:text-orange-400 font-medium py-2 cursor-pointer">Mes Commandes</a>
+          @if (isClient()) {
+            <a (click)="navigateTo('/sales-orders')" class="text-white hover:text-orange-400 font-medium py-2 cursor-pointer">Mes Commandes</a>
+          }
           
           @if (!isAuthenticated) {
             <a (click)="navigateTo('/login')" class="text-white hover:text-orange-400 font-medium py-2 cursor-pointer">Login</a>

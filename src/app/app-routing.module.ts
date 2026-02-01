@@ -40,7 +40,9 @@ const routes: Routes = [
       { path: '', redirectTo: 'home', pathMatch: 'full' },
       { 
         path: 'home', 
-        component: DashboardHomeComponent 
+        component: DashboardHomeComponent,
+        canActivate: [roleGuard],
+        data: { roles: ['ADMIN', 'WAREHOUSE_MANAGER'] }
       },
       { 
         path: 'suppliers', 
@@ -88,7 +90,7 @@ const routes: Routes = [
         path: 'purchase-orders', 
         component: PurchaseOrdersComponent,
         canActivate: [roleGuard],
-        data: { roles: ['ADMIN'] }
+        data: { roles: ['ADMIN', 'WAREHOUSE_MANAGER'] }
       },
       { 
         path: 'sales-orders', 

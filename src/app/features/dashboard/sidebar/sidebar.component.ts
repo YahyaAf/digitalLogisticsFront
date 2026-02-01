@@ -25,7 +25,7 @@ export class SidebarComponent {
     { icon: 'users', label: 'Clients', route: '/dashboard/clients', roles: ['ADMIN'] },
     { icon: 'package', label: 'Products', route: '/dashboard/products', badge: 12, roles: ['ADMIN', 'WAREHOUSE_MANAGER'] },
     { icon: 'supplier', label: 'Suppliers', route: '/dashboard/suppliers', roles: ['ADMIN', 'WAREHOUSE_MANAGER'] },
-    { icon: 'purchase', label: 'Purchase Orders', route: '/dashboard/purchase-orders', roles: ['ADMIN'] },
+    { icon: 'purchase', label: 'Purchase Orders', route: '/dashboard/purchase-orders', roles: ['ADMIN', 'WAREHOUSE_MANAGER'] },
     { icon: 'truck', label: 'Carriers', route: '/dashboard/carriers', roles: ['ADMIN', 'WAREHOUSE_MANAGER'] },
     { icon: 'warehouse', label: 'Warehouses', route: '/dashboard/warehouses', roles: ['ADMIN', 'WAREHOUSE_MANAGER'] },
     { icon: 'inventory', label: 'Inventories', route: '/dashboard/inventories', roles: ['ADMIN', 'WAREHOUSE_MANAGER'] },

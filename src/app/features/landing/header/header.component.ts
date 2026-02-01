@@ -40,6 +40,10 @@ export class HeaderComponent implements OnInit {
     this.isAuthenticated = !!token;
   }
 
+  isClient(): boolean {
+    return this.authService.isClient();
+  }
+
   toggleMobileMenu(): void {
     this.mobileMenuOpen = !this.mobileMenuOpen;
   }

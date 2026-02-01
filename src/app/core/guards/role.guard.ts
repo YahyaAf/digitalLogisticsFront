@@ -1,8 +1,9 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router, ActivatedRouteSnapshot } from '@angular/router';
 import { AuthService } from '../services/auth.service';
+import { firstValueFrom } from 'rxjs';
 
-export const roleGuard: CanActivateFn = (route: ActivatedRouteSnapshot) => {
+export const roleGuard: CanActivateFn = async (route: ActivatedRouteSnapshot) => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
@@ -26,14 +27,28 @@ export const roleGuard: CanActivateFn = (route: ActivatedRouteSnapshot) => {
     return true;
   }
 
+  // Si currentUser n'est pas encore chargé, le charger maintenant
+  if (!authService.currentUser()) {
+    console.log('roleGuard: currentUser not loaded, loading now...');
+    try {
+      const response = await firstValueFrom(authService.getCurrentUser());
+      if (response && response.success) {
+        console.log('roleGuard: currentUser loaded successfully');
+      }
+    } catch (error) {
+      console.error('roleGuard: Error loading currentUser', error);
+      router.navigate(['/login']);
+      return false;
+    }
+  }
+
   // Récupérer le rôle de l'utilisateur depuis currentUser (pas depuis JWT)
   const userRole = authService.getUserRole();
   
   if (!userRole) {
-    // currentUser n'est pas encore chargé, permettre l'accès temporairement
-    // L'intercepteur va charger currentUser et le router sera re-évalué
-    console.log('roleGuard: currentUser not loaded yet, allowing access temporarily');
-    return true;
+    console.warn('roleGuard: No role found even after loading currentUser');
+    router.navigate(['/']);
+    return false;
   }
   
   console.log('roleGuard: User role:', userRole, '| Required roles:', requiredRoles);
