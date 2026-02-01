@@ -7,6 +7,7 @@ import { PurchaseOrderRequest, PurchaseOrderResponse, PurchaseOrderStatus, Purch
 import { SupplierResponse } from '../../../core/models/supplier.model';
 import { ProductResponse } from '../../../core/models/product.model';
 import { WarehouseResponse } from '../../../core/models/warehouse.model';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-purchase-orders',
@@ -57,7 +58,8 @@ export class PurchaseOrdersComponent implements OnInit {
     private orderService: PurchaseOrderService,
     private supplierService: SupplierService,
     private productService: ProductService,
-    private warehouseService: WarehouseService
+    private warehouseService: WarehouseService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -65,6 +67,10 @@ export class PurchaseOrdersComponent implements OnInit {
     this.loadSuppliers();
     this.loadProducts();
     this.loadWarehouses();
+  }
+
+  isAdmin(): boolean {
+    return this.authService.isAdmin();
   }
 
   loadOrders(): void {

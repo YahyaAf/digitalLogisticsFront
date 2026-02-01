@@ -3,6 +3,7 @@ import { WarehouseService } from '../../../core/services/warehouse.service';
 import { UserService } from '../../../core/services/user.service';
 import { WarehouseRequest, WarehouseResponse } from '../../../core/models/warehouse.model';
 import { UserResponse, Role } from '../../../core/models/user.model';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-warehouses',
@@ -37,12 +38,17 @@ export class WarehousesComponent implements OnInit {
 
   constructor(
     private warehouseService: WarehouseService,
-    private userService: UserService
+    private userService: UserService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
     this.loadWarehouses();
     this.loadManagers();
+  }
+
+  isAdmin(): boolean {
+    return this.authService.isAdmin();
   }
 
   loadWarehouses(): void {

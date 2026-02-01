@@ -5,6 +5,7 @@ import { ProductService } from '../../../core/services/product.service';
 import { InventoryRequest, InventoryResponse } from '../../../core/models/inventory.model';
 import { WarehouseResponse } from '../../../core/models/warehouse.model';
 import { ProductResponse } from '../../../core/models/product.model';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-inventories',
@@ -44,13 +45,18 @@ export class InventoriesComponent implements OnInit {
   constructor(
     private inventoryService: InventoryService,
     private warehouseService: WarehouseService,
-    private productService: ProductService
+    private productService: ProductService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
     this.loadInventories();
     this.loadWarehouses();
     this.loadProducts();
+  }
+
+  isAdmin(): boolean {
+    return this.authService.isAdmin();
   }
 
   loadInventories(): void {

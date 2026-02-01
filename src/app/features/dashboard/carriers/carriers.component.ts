@@ -7,6 +7,7 @@ import {
   CarrierStatus 
 } from '../../../core/models/carrier.model';
 import { ShipmentResponse, ShipmentStatus } from '../../../core/models/shipment.model';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-carriers',
@@ -53,12 +54,17 @@ export class CarriersComponent implements OnInit {
 
   constructor(
     private carrierService: CarrierService,
-    private shipmentService: ShipmentService
+    private shipmentService: ShipmentService,
+    public authService: AuthService
   ) {}
 
   ngOnInit(): void {
     this.loadAllCarriers();
     this.loadStats();
+  }
+
+  isAdmin(): boolean {
+    return this.authService.isAdmin();
   }
 
   loadAllCarriers(): void {

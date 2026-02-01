@@ -1,7 +1,6 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { SupplierService } from '../../../core/services/supplier.service';
-import { SupplierResponse, SupplierRequest } from '../../../core/models/supplier.model';
-
+import { SupplierResponse, SupplierRequest } from '../../../core/models/supplier.model';import { AuthService } from '../../../core/services/auth.service';
 @Component({
   selector: 'app-suppliers',
   standalone: false,
@@ -31,10 +30,17 @@ export class SuppliersComponent implements OnInit {
     matricule: ''
   });
 
-  constructor(private supplierService: SupplierService) {}
+  constructor(
+    private supplierService: SupplierService,
+    private authService: AuthService
+  ) {}
 
   ngOnInit(): void {
     this.loadSuppliers();
+  }
+
+  isAdmin(): boolean {
+    return this.authService.isAdmin();
   }
 
   showNotification(type: 'success' | 'error', message: string): void {

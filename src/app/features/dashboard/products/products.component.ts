@@ -1,6 +1,7 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { ProductService } from '../../../core/services/product.service';
 import { ProductRequest, ProductResponse } from '../../../core/models/product.model';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-products',
@@ -36,10 +37,18 @@ export class ProductsComponent implements OnInit {
     message: string;
   } | null>(null);
 
-  constructor(private productService: ProductService) {}
+  constructor(
+    private productService: ProductService,
+    private authService: AuthService
+  ) {}
 
   ngOnInit(): void {
     this.loadProducts();
+  }
+
+  // Check if user is ADMIN (can modify)
+  isAdmin(): boolean {
+    return this.authService.isAdmin();
   }
 
   loadProducts(): void {

@@ -19,11 +19,13 @@
       <div>
         <h1 class="text-2xl font-bold text-white">Purchase Orders</h1>
       </div>
-      <button 
-        (click)="openCreateModal()"
-        class="px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-lg font-medium transition-all shadow-lg hover:shadow-purple-500/50">
-        + Add Purchase Order
-      </button>
+      @if (isAdmin()) {
+        <button 
+          (click)="openCreateModal()"
+          class="px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-lg font-medium transition-all shadow-lg hover:shadow-purple-500/50">
+          + Add Purchase Order
+        </button>
+      }
     </div>
 
     <!-- Status Filter Tabs -->
@@ -107,48 +109,61 @@
                       </button>
 
                       @if (order.status === PurchaseOrderStatus.CREATED) {
-                        <button 
-                          (click)="approveOrder(order.id)"
-                          class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded text-xs transition-colors">
-                          Approve
-                        </button>
-                        <button 
-                          (click)="openEditModal(order)"
-                          class="px-3 py-1 bg-yellow-600 hover:bg-yellow-700 text-white rounded text-xs transition-colors">
-                          Edit
-                        </button>
-                        <button 
-                          (click)="cancelOrder(order.id)"
-                          class="px-3 py-1 bg-orange-600 hover:bg-orange-700 text-white rounded text-xs transition-colors">
-                          Cancel
-                        </button>
-                        <button 
-                          (click)="deleteOrder(order.id)"
-                          class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded text-xs transition-colors">
-                          Delete
-                        </button>
+                        @if (isAdmin()) {
+                          <button 
+                            (click)="approveOrder(order.id)"
+                            class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded text-xs transition-colors">
+                            Approve
+                          </button>
+                          <button 
+                            (click)="openEditModal(order)"
+                            class="px-3 py-1 bg-yellow-600 hover:bg-yellow-700 text-white rounded text-xs transition-colors">
+                            Edit
+                          </button>
+                          <button 
+                            (click)="cancelOrder(order.id)"
+                            class="px-3 py-1 bg-orange-600 hover:bg-orange-700 text-white rounded text-xs transition-colors">
+                            Cancel
+                          </button>
+                          <button 
+                            (click)="deleteOrder(order.id)"
+                            class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded text-xs transition-colors">
+                            Delete
+                          </button>
+                        } @else {
+                          <span class="text-gray-500 text-xs">View Only</span>
+                        }
                       }
 
                       @if (order.status === PurchaseOrderStatus.APPROVED) {
-                        <button 
-                          (click)="openReceiveModal(order)"
-                          class="px-3 py-1 bg-green-600 hover:bg-green-700 text-white rounded text-xs transition-colors">
-                          Receive
-                        </button>
-                        <button 
-                          (click)="cancelOrder(order.id)"
-                          class="px-3 py-1 bg-orange-600 hover:bg-orange-700 text-white rounded text-xs transition-colors">
-                          Cancel
-                        </button>
+                        @if (isAdmin()) {
+                          <button 
+                            (click)="openReceiveModal(order)"
+                            class="px-3 py-1 bg-green-600 hover:bg-green-700 text-white rounded text-xs transition-colors">
+                            Receive
+                          </button>
+                          <button 
+                            (click)="cancelOrder(order.id)"
+                            class="px-3 py-1 bg-orange-600 hover:bg-orange-700 text-white rounded text-xs transition-colors">
+                            Cancel
+                          </button>
+                        } @else {
+                          <span class="text-gray-500 text-xs">View Only</span>
+                        }
                       }
 
                       @if (order.status === PurchaseOrderStatus.CANCELED) {
-                        <button 
-                          (click)="deleteOrder(order.id)"
-                          class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded text-xs transition-colors">
-                          Delete
-                        </button>
+                        @if (isAdmin()) {
+                          <button 
+                            (click)="deleteOrder(order.id)"
+                            class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded text-xs transition-colors">
+                            Delete
+                          </button>
+                        } @else {
+                          <span class="text-gray-500 text-xs">View Only</span>
+                        }
                       }
+
                     </div>
                   </td>
                 </tr>
