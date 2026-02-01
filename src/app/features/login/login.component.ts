@@ -50,12 +50,37 @@ export class LoginComponent {
         if (response.success) {
           // Charger les infos de l'utilisateur après login réussi
           this.authService.getCurrentUser().subscribe({
-            next: () => {
-              this.router.navigateByUrl(this.returnUrl);
+            next: (userResponse) => {
+              console.log('✅ User loaded:', userResponse.data);
+              
+              // Attendre que currentUser soit bien set
+              setTimeout(() => {
+                const userRole = this.authService.getUserRole();
+                console.log('🔑 User role for redirect:', userRole);
+                
+                if (userRole === 'CLIENT') {
+                  console.log('➡️ Redirecting CLIENT to /');
+                  this.router.navigate(['/']);
+                } else if (userRole === 'ADMIN' || userRole === 'WAREHOUSE_MANAGER') {
+                  console.log('➡️ Redirecting', userRole, 'to /dashboard');
+                  this.router.navigate(['/dashboard']);
+                } else {
+                  console.log('➡️ Unknown role, using returnUrl');
+                  this.router.navigateByUrl(this.returnUrl);
+                }
+              }, 100);
             },
             error: () => {
-              // Même si getCurrentUser échoue, on redirige quand même
-              this.router.navigateByUrl(this.returnUrl);
+              console.error('❌ getCurrentUser failed');
+              // Même si getCurrentUser échoue, on redirige selon le rôle du token
+              const userRole = this.authService.getUserRole();
+              if (userRole === 'CLIENT') {
+                this.router.navigate(['/']);
+              } else if (userRole === 'ADMIN' || userRole === 'WAREHOUSE_MANAGER') {
+                this.router.navigate(['/dashboard']);
+              } else {
+                this.router.navigateByUrl(this.returnUrl);
+              }
             }
           });
         }

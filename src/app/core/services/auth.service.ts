@@ -123,4 +123,68 @@ export class AuthService {
   getRefreshToken(): string | null {
     return localStorage.getItem(this.REFRESH_TOKEN_KEY);
   }
+
+  getUserRole(): string | null {
+    // Le JWT backend ne contient PAS le rôle, uniquement le subject (email)
+    // On doit utiliser currentUser qui vient de l'API /me
+    const user = this.currentUser();
+    if (!user) {
+      console.log('getUserRole: No currentUser yet');
+      return null;
+    }
+
+    console.log('getUserRole: currentUser =', user);
+
+    // Format 1: user.role (string direct)
+    if (user.role) {
+      const cleanRole = user.role.replace('ROLE_', '');
+      console.log('getUserRole: Found in user.role =', cleanRole);
+      return cleanRole;
+    }
+
+    // Format 2: user.roles (array de strings)
+    if (user.roles && user.roles.length > 0) {
+      const cleanRole = user.roles[0].replace('ROLE_', '');
+      console.log('getUserRole: Found in user.roles =', cleanRole);
+      return cleanRole;
+    }
+
+    // Format 3: user.authorities (Spring Security UserDetails)
+    if (user.authorities && Array.isArray(user.authorities)) {
+      console.log('getUserRole: authorities =', user.authorities);
+      for (const auth of user.authorities) {
+        const authStr = typeof auth === 'string' ? auth : auth.authority;
+        if (authStr && (authStr.includes('ADMIN') || authStr.includes('MANAGER') || authStr.includes('CLIENT'))) {
+          const cleanRole = authStr.replace('ROLE_', '');
+          console.log('getUserRole: Found in authorities =', cleanRole);
+          return cleanRole;
+        }
+      }
+    }
+
+    console.warn('getUserRole: No role found in user object. Keys:', Object.keys(user));
+    return null;
+  }
+
+  hasRole(role: string): boolean {
+    const userRole = this.getUserRole();
+    return userRole === role;
+  }
+
+  hasAnyRole(roles: string[]): boolean {
+    const userRole = this.getUserRole();
+    return userRole ? roles.includes(userRole) : false;
+  }
+
+  isAdmin(): boolean {
+    return this.hasRole('ADMIN');
+  }
+
+  isManager(): boolean {
+    return this.hasRole('WAREHOUSE_MANAGER');
+  }
+
+  isClient(): boolean {
+    return this.hasRole('CLIENT');
+  }
 }

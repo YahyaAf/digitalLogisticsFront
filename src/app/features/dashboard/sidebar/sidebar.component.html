@@ -19,7 +19,7 @@
 
   <!-- Navigation -->
   <nav class="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
-    @for (item of menuItems; track item.route) {
+    @for (item of menuItems(); track item.route) {
       <a 
         [routerLink]="item.route"
         [class]="'flex items-center space-x-2 px-3 py-2 rounded-md transition-all duration-200 group relative text-sm ' +

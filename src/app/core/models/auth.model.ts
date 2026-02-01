@@ -29,8 +29,16 @@ export interface ApiResponse<T> {
 }
 
 export interface User {
-  id: number;
-  email: string;
+  id?: number;
+  email?: string;
+  username?: string;
   name?: string;
   roles?: string[];
+  role?: string;
+  // Format Spring Security UserDetails
+  authorities?: Array<{authority: string}> | string[];
+  enabled?: boolean;
+  accountNonExpired?: boolean;
+  accountNonLocked?: boolean;
+  credentialsNonExpired?: boolean;
 }

@@ -18,30 +18,96 @@ import { DashboardSalesOrdersComponent } from './features/dashboard/sales-orders
 import { ShipmentsComponent } from './features/dashboard/shipments/shipments.component';
 import { CarriersComponent } from './features/dashboard/carriers/carriers.component';
 import { authGuard } from './core/guards/auth.guard';
+import { roleGuard } from './core/guards/role.guard';
+import { loginGuard } from './core/guards/login.guard';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
-  { path: 'login', component: LoginComponent },
-  { path: 'register', component: RegisterComponent },
-  { path: 'sales-orders', component: SalesOrdersComponent, canActivate: [authGuard] },
+  { path: 'login', component: LoginComponent, canActivate: [loginGuard] },
+  { path: 'register', component: RegisterComponent, canActivate: [loginGuard] },
+  { 
+    path: 'sales-orders', 
+    component: SalesOrdersComponent, 
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['CLIENT'] }
+  },
   { 
     path: 'dashboard', 
     component: DashboardLayoutComponent,
-    canActivate: [authGuard],
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['ADMIN', 'WAREHOUSE_MANAGER'] },
     children: [
       { path: '', redirectTo: 'home', pathMatch: 'full' },
-      { path: 'home', component: DashboardHomeComponent },
-      { path: 'suppliers', component: SuppliersComponent },
-      { path: 'users', component: UsersComponent },
-      { path: 'warehouses', component: WarehousesComponent },
-      { path: 'clients', component: ClientsComponent },
-      { path: 'products', component: ProductsComponent },
-      { path: 'inventories', component: InventoriesComponent },
-      { path: 'inventory-movements', component: InventoryMovementsComponent },
-      { path: 'purchase-orders', component: PurchaseOrdersComponent },
-      { path: 'sales-orders', component: DashboardSalesOrdersComponent },
-      { path: 'shipments', component: ShipmentsComponent },
-      { path: 'carriers', component: CarriersComponent },
+      { 
+        path: 'home', 
+        component: DashboardHomeComponent 
+      },
+      { 
+        path: 'suppliers', 
+        component: SuppliersComponent,
+        canActivate: [roleGuard],
+        data: { roles: ['ADMIN', 'WAREHOUSE_MANAGER'] }
+      },
+      { 
+        path: 'users', 
+        component: UsersComponent,
+        canActivate: [roleGuard],
+        data: { roles: ['ADMIN'] }
+      },
+      { 
+        path: 'warehouses', 
+        component: WarehousesComponent,
+        canActivate: [roleGuard],
+        data: { roles: ['ADMIN', 'WAREHOUSE_MANAGER'] }
+      },
+      { 
+        path: 'clients', 
+        component: ClientsComponent,
+        canActivate: [roleGuard],
+        data: { roles: ['ADMIN'] }
+      },
+      { 
+        path: 'products', 
+        component: ProductsComponent,
+        canActivate: [roleGuard],
+        data: { roles: ['ADMIN', 'WAREHOUSE_MANAGER'] }
+      },
+      { 
+        path: 'inventories', 
+        component: InventoriesComponent,
+        canActivate: [roleGuard],
+        data: { roles: ['ADMIN', 'WAREHOUSE_MANAGER'] }
+      },
+      { 
+        path: 'inventory-movements', 
+        component: InventoryMovementsComponent,
+        canActivate: [roleGuard],
+        data: { roles: ['ADMIN', 'WAREHOUSE_MANAGER'] }
+      },
+      { 
+        path: 'purchase-orders', 
+        component: PurchaseOrdersComponent,
+        canActivate: [roleGuard],
+        data: { roles: ['ADMIN'] }
+      },
+      { 
+        path: 'sales-orders', 
+        component: DashboardSalesOrdersComponent,
+        canActivate: [roleGuard],
+        data: { roles: ['ADMIN', 'WAREHOUSE_MANAGER'] }
+      },
+      { 
+        path: 'shipments', 
+        component: ShipmentsComponent,
+        canActivate: [roleGuard],
+        data: { roles: ['ADMIN', 'WAREHOUSE_MANAGER'] }
+      },
+      { 
+        path: 'carriers', 
+        component: CarriersComponent,
+        canActivate: [roleGuard],
+        data: { roles: ['ADMIN', 'WAREHOUSE_MANAGER'] }
+      },
     ]
   }
 ];
